@@ -1,0 +1,80 @@
+.m-btn {
+  display: flex;
+  background-color: #019160;
+  border-radius: 4px;
+  height: 40px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: "GoogleSans-Regular";
+  padding-left: 16px;
+  padding-right: 16px;
+  align-items: center;
+  border: none;
+  cursor: pointer;
+}
+
+.m-btn-icon {
+  margin-right: 8px;
+}
+
+.m-btn:hover {
+  background-color: #2fbe8e;
+}
+
+.m-btn:active {
+  background-color: #01b075;
+}
+
+.m-second-button {
+  border: 1px solid #bbbbbb;
+  border-radius: 4px;
+  height: 40px;
+  color: #000000;
+  padding-left: 24px;
+  padding-right: 24px;
+  text-align: center;
+}
+
+.m-btn-refresh {
+  background: url("../../assets/icon/refresh.png");
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.m-btn-cancel {
+  
+  background-color: #E5E5E5;
+  margin-right: 16px;
+}
+
+.m-btn-cancel:hover
+{
+  background-color: #bbbbbb;
+}
+
+.box-button
+{
+  min-width: 68px;
+  display: flex;
+}
+
+.button-info-cancel .text-cancel
+{
+    color: #000000;
+}
+
+.text-save, .text-cancel
+{
+  margin: 0 auto;
+}
+
+.text-save
+{
+  margin-left: 0px;
+}
+
+.btn-save
+{
+  margin-left: 16px;
+ 
+}

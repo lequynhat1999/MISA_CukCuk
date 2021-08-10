@@ -1,0 +1,71 @@
+.header
+{
+    width: calc(100% - 221px);
+    height: 60px;
+    border-bottom: 1px solid #e5e5e5;
+    float: left;
+    display: flex;
+    position: relative;
+}
+
+.header .text-right, .text-left
+{
+    display: flex;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.header .text-right
+{
+    position: absolute;
+    right: 16px;
+}
+
+.text-left .text-name-restaurant
+{
+    line-height: 60px;
+    padding-left: 24px;
+    font-weight: bolder;
+    font-size: 15px;
+}
+
+.text-left 
+{
+    margin: auto 0;
+}
+
+
+.header .text-right .text-name-user
+{
+    line-height: 60px;
+    font-weight: bold;
+    padding-right: 16px;
+}
+
+.text-right .icon-default
+{
+    width: 20px;
+    height: 20px;
+    background: url('../../assets/icon/avatar-default.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: auto 0;
+    padding-right: 16px;
+}
+
+.text-right .icon-option
+{
+    width: 20px;
+    height: 20px;
+    background: url('../../assets/icon/option.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin: auto 0;
+    
+}
+
+.text-right-row{
+    display: flex;
+    position: absolute;
+    right: 0px;
+}

@@ -1,0 +1,103 @@
+.modal-delete {
+  /* display: none;  */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-delete-hidden
+{
+  display: none;
+}
+
+/* Modal Content/Box */
+.modal-content-delete {
+  background-color: #fefefe;
+  margin: 15% auto;
+  border: 1px solid #888;
+  width: 28%;
+  position: relative;
+}
+
+/* The Close Button */
+.close-delete {
+  position: absolute;
+  top: -2px;
+  right: 10px;
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close-delete:hover,
+.close-delete:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+.header-delete {
+  padding-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+.text-header-delete {
+  font-size: 15px;
+  font-weight: bolder;
+}
+
+.content-delete {
+  margin-top: 24px;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.icon-warning {
+  color: red;
+  font-size: 20px;
+}
+.text-content-delete {
+  padding-left: 10px;
+}
+
+.footer-delete {
+  margin-top: 24px;
+  height: 60px;
+  background-color: #E5E5E5 ;
+}
+
+.text-cancel-delete, .text-confirm
+{
+    margin: auto auto;
+}
+
+.text-cancel-delete
+{
+    color: #000;
+}
+
+.button-delete-cancel
+{
+    margin-right: 16px;
+}
+
+.m-btn-cancel-delete
+{
+    background-color: #BBBBBB;
+}
+
+.m-btn-confirm
+{
+    background-color: #F65454;
+}
+
+.m-btn-cancel-delete:hover
+{
+    background-color: #E5E5E5;
+}

@@ -1,0 +1,6 @@
+.table-employee
+{
+    height: calc(100vh - 214px);
+    /* height: 100%; */
+    width: 100%;
+}

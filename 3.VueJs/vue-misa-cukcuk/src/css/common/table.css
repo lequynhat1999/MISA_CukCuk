@@ -1,0 +1,46 @@
+.table {
+  width: 100%;
+  height: calc(100vh - 214px);
+}
+
+table th,
+td {
+  border-bottom: 1px solid #bbbbbb;
+  text-align: left;
+  padding-left: 10px;
+  height: 48px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+td
+{
+  max-width: 120px;
+}
+table
+{
+  margin-left: 16px;
+}
+
+/* table tbody tr:nth-child(odd) {
+  background-color: #E9EBEE;
+} */
+
+th
+{
+  position: sticky;
+  top: 0;
+  background-color: #fff;
+
+}
+tbody
+{
+  overflow-y: scroll;
+}
+
+tbody tr:hover
+{
+  background-color: #e5e5e5;
+  cursor: pointer;
+}

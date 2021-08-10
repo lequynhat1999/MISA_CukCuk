@@ -1,0 +1,16 @@
+body {
+    margin: 0;
+    font-family: 'GoogleSans-Regular';
+    font-size: 13px;
+    
+}
+
+@font-face {
+    font-family: 'GoogleSans-Black';
+    src: url('/content/font/GoogleSans-Black.otf');
+}
+
+@font-face {
+    font-family: 'GoogleSans-Regular';
+    src: url('/content/font/GoogleSans-Regular.otf');
+}

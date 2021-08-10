@@ -1,0 +1,77 @@
+@import url("./content.css");
+@import url("./grid.css");
+@import url("./header.css");
+@import url("./navbar.css");
+@import url("./paging.css");
+@import url("./table.css");
+@import url("./toolbar.css");
+@import url("../base/button.css");
+@import url("../base/combobox.css");
+@import url("../base/dropdown.css");
+@import url("../base/icon.css");
+@import url("../base/input.css");
+@import url("../base/text_box.css");
+@import url("../page/employee.css");
+@import url("../page/delete-employee.css");
+@import url("../page/info-employee.css");
+body {
+  margin: 0;
+  font-family: "GoogleSans-Regular";
+  font-size: 13px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+::-webkit-scrollbar {
+  height: 4px;
+
+  width: 4px;
+
+  border: 1px solid #888;
+}
+
+@font-face {
+  font-family: "GoogleSans-Black";
+  src: url("../../assets/font/GoogleSans-Black.otf");
+}
+
+@font-face {
+  font-family: "GoogleSans-Regular";
+  src: url("../../assets/font/GoogleSans-Regular.otf");
+}
+
+/* css for input date-picker */
+.mx-input {
+  width: 227px !important;
+  height: 40px !important;
+  border: 1px solid #bbbbbb !important;
+  padding: 0px !important;
+  padding-left: 16px !important;
+  color: #000 !important;
+}
+
+.mx-input:focus {
+  border-color: #019160 !important;
+}
+
+.mx-input::placeholder
+{
+  font-size: 30px !important;
+  font-weight: bolder !important;
+}
+
+.mx-icon-calendar,
+.mx-icon-clear {
+  position: absolute !important;
+  top: 50%;
+  right: 2px !important;
+}

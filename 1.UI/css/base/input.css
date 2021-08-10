@@ -1,0 +1,100 @@
+input
+{
+    padding: 10px 16px;
+    outline: none;
+    border-radius: 4px;
+    border: 1px solid #bbbbbb;
+    height: 18px;
+}
+
+input::placeholder
+{
+    font-size: 12px;
+
+}
+
+
+
+.input-search
+{
+    padding-left: 40px;
+}
+
+.icon-input-delete
+{
+    position: absolute;
+}
+
+
+
+.input-info
+{
+    width: 84%;
+}
+
+
+
+.box-search
+{
+    display: flex;
+    position: relative;
+}
+
+.icon-input-delete{
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    display: none;
+}
+
+.box-input-salary
+{
+    display: flex;
+    border-radius: 4px;
+    border: 1px solid #bbbbbb;
+}
+
+.box-input-salary .vnd
+{
+    position: absolute;
+    right: 24px;
+    margin: 10px;
+}
+
+.input-salary
+{
+    border: none;
+    outline: none;
+    margin-right: 32px;
+}
+
+.input-info:focus
+{
+    border-color:#019160 ;
+}
+
+.input-search:focus
+{
+    border: 1px solid #019160;
+    
+}
+
+.bg-red
+{
+    border: 1px solid red;
+}
+
+.bg-default
+{
+    border: 1px solid #bbbbbb;
+}
+
+.bg-focus
+{
+    border: 1px solid #019160;
+}
+
+.icon-input-delete:hover
+{
+    cursor: pointer;
+}
