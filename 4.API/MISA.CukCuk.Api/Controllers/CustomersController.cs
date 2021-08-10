@@ -16,7 +16,7 @@ namespace MISA.CukCuk.Api.Controllers
     public class CustomersController : ControllerBase
     {
         /// <summary>
-        /// Lấy ra tất cả thông tin của khách hàng trong db
+        /// Lấy ra tất cả thông tin của khách hàng trong database
         /// </summary>
         /// <returns>Danh sách khách hàng trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
@@ -28,7 +28,7 @@ namespace MISA.CukCuk.Api.Controllers
             var connectionString = "Host = 47.241.69.179;" +
                  "Database = MISA.CukCuk_Demo_NVMANH;" +
                  "User Id = dev;" +
-                 "Password = 12345678;";
+                 "Password = 12345678;"; 
 
             // tạo đối tượng kết nối db
             IDbConnection dbConnection = new MySqlConnection(connectionString);
