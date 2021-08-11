@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MISA.ApplicationCore;
 using MISA.CukCuk.Api.Model;
 using MySqlConnector;
 using System;
@@ -23,23 +24,26 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet]
         public IActionResult GetCustomers()
         {
+            var customerService = new CustomerService();
+            var customers = customerService.GetCustomers();
+            return Ok(customers);
 
-            // kết nối db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISA.CukCuk_Demo_NVMANH;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;"; 
+            //// kết nối db
+            //var connectionString = "Host = 47.241.69.179;" +
+            //     "Database = MISA.CukCuk_Demo_NVMANH;" +
+            //     "User Id = dev;" +
+            //     "Password = 12345678;";
 
-            // tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
+            //// tạo đối tượng kết nối db
+            //IDbConnection dbConnection = new MySqlConnection(connectionString);
 
-            // lấy dữ liệu
-            var sqlQuery = "SELECT * FROM Customer";
-            var customers = dbConnection.Query<object>(sqlQuery);
+            //// lấy dữ liệu
+            //var sqlQuery = "SELECT * FROM Customer";
+            //var customers = dbConnection.Query<object>(sqlQuery);
 
-            // trả về client
-            var res = StatusCode(200, customers);
-            return res;
+            //// trả về client
+            //var res = StatusCode(200, customers);
+            //return res;
         }
 
         /// <summary>
@@ -51,10 +55,14 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpGet("{customerId}")]
         public IActionResult GetCustomerById(Guid customerId)
         {
+            var customerService = new CustomerService();
+            var customer = customerService.GetCustomerById(customerId);
+            return Ok(customer);
+
             // trả dữ liệu về cho client
-            var customer = GetCustomerForPut(customerId);
-            var response = StatusCode(200, customer);
-            return response;
+            //var customer = GetCustomerForPut(customerId);
+            //var response = StatusCode(200, customer);
+            //return response;
         }
 
         /// <summary>
@@ -93,6 +101,9 @@ namespace MISA.CukCuk.Api.Controllers
         [HttpPost]
         public IActionResult InsertCustomer(Customer customer)
         {
+
+
+
             // tạo mới lại CustomerId
             customer.CustomerId = Guid.NewGuid();
 
@@ -140,13 +151,39 @@ namespace MISA.CukCuk.Api.Controllers
             // khởi tạo đối tượng kết nối vào db
             IDbConnection dbConnection = new MySqlConnection(connectionString);
 
+            // Validate dữ liệu
+            // Check trường mã bắt buộc nhập:
+            var customerCode = customer.CustomerCode;
+            if (string.IsNullOrEmpty(customerCode))
+            {
+                var msg = new
+                {
+                    devMsg = new { fieldName = "CustomerCode", msg = "Mã khách hàng không được phép để trống" },
+                    userMsg = "Mã khách hàng không được phép để trống",
+                    Code = 999,
+                };
+                return BadRequest(msg);
+            }
+
+            // check trùng mã
+            var sqlCommand = "SELECT * FROM Customer";
+            var customers = dbConnection.Query<object>(sqlCommand);
+
+
             // thêm dữ liệu vào db
             var sqlQuery = $"INSERT INTO Customer({columnsName}) VALUES({columnsParam})";
             var row = dbConnection.Execute(sqlQuery, param: parameters);
 
             // trả kết quả về cho client
-            var res = StatusCode(200, row);
-            return res;
+            if (row > 0)
+            {
+                return Created("created", customer);
+            }
+            else
+            {
+                return NoContent();
+            }
+
         }
 
         /// <summary>
@@ -157,7 +194,7 @@ namespace MISA.CukCuk.Api.Controllers
         /// <returns>Số bản ghi khách hàng được sửa trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpPut("{customerId}")]
-        public IActionResult UpdateCustomer(Guid customerId,Customer customerUpdate)
+        public IActionResult UpdateCustomer(Guid customerId, Customer customerUpdate)
         {
             // lấy ra object customer muốn sửa theo Id
             //var customer = GetCustomerForPut(customerId);
@@ -197,7 +234,7 @@ namespace MISA.CukCuk.Api.Controllers
             }
 
             // cắt dấu phẩy cuối chuỗi
-            columnsName = columnsName.Remove(columnsName.Length-1, 1);
+            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
 
             // sửa dữ liệu
             var sqlQuery = $"UPDATE Customer SET {columnsName} WHERE CustomerId = @customerId";

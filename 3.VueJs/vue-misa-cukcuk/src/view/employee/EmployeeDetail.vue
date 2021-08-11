@@ -451,6 +451,7 @@ export default {
       this.mode = 1;
       this.employee = {};
       this.$emit("cancelFormDetail", this.mode);
+      this.errors.clear();
     },
     /**-----------------------------------------------------------------
      * Hàm sinh tự động mã nhân viên
