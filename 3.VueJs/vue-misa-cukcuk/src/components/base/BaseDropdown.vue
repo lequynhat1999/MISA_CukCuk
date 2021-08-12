@@ -1,17 +1,15 @@
 <template>
-  <div
-    class="dropdown col-3 dropdown-filter"
-    @click="toggleDropdown"
-    
-  >
-    <div class="dropdown-text" >{{ selectedText }}</div>
+  <div class="dropdown col-3 dropdown-filter" @click="toggleDropdown">
+    <div class="dropdown-text">{{ selectedText }}</div>
     <div
       class="dropdown-icon-delete"
       :class="{ 'icon-delete-hidden': hiddenIcon }"
     >
       <i class="fas fa-times"></i>
     </div>
-    <div class="dropdown-icon"><i class="fas fa-chevron-down"></i></div>
+    <div class="dropdown-icon" :class="{rotate : isRotate}">
+      <i class="fas fa-chevron-down"></i>
+    </div>
     <div
       class="dropdown-data"
       :class="{ 'dropdown-hidden': isClose }"
@@ -56,23 +54,22 @@ export default {
       items: [],
       currentIndex: 0,
       iconSelected: `<i class="fa fa-check"></i>`,
+      isRotate: false,
     };
   },
-  
 
-  watch:{
+  watch: {
     async value() {
       // wait get full options
       this.items = [];
       await this.getItem();
       let i = this.getIndexByValue();
-      if(i != -1) this.selectItem(i);
+      if (i != -1) this.selectItem(i);
       else this.selectItem(0);
     },
   },
 
   methods: {
-
     /**--------------------------------------------------------------------
      * Hàm bắt sự kiện click gửi value sang cho bên employeeDetail
      * CreateBy: LQNhat(2/8/2021)
@@ -87,6 +84,7 @@ export default {
      */
     toggleDropdown() {
       this.isClose = !this.isClose;
+      this.isRotate = !this.isRotate;
     },
 
     /**---------------------------------------------------
@@ -141,7 +139,6 @@ export default {
         ? true
         : false;
     },
-    
 
     /**--------------------------------------------------------------
      * Hàm trả về index của item khi so sánh value
@@ -162,6 +159,7 @@ export default {
     close(e) {
       if (!this.$el.contains(e.target)) {
         this.isClose = true;
+        this.isRotate = false;
       }
     },
   },

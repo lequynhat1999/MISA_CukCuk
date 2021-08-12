@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/common/main.css" />
+    <link rel="stylesheet" href="../css/base/button.css" />
+    <link rel="stylesheet" href="../css/common/toolbar.css" />
+    <link rel="stylesheet" href="../css/base/input.css" />
+    <link rel="stylesheet" href="../css/base/icon.css" />
+    <link rel="stylesheet" href="../css/common/dropdown.css" />
+    <link rel="stylesheet" href="../css/common/table.css" />
+    <link rel="stylesheet" href="../css/common/paging.css" />
+    <link rel="stylesheet" href="../css/common/grid.css">
+    <link rel="stylesheet" href="../css/base/combobox.css">
+    <link rel="stylesheet" href="../css/page/info-employee.css" />
+    <link rel="stylesheet" href="../css/common/header.css" />
+    <link rel="stylesheet" href="../css/common/navbar.css" />
+    <link rel="stylesheet" href="../css/common//content.css" />
+    <link rel="stylesheet" href="../css/page/employee.css" />
+    <link
+      rel="stylesheet"
+      href="/content/font/fontawesome-5.15.1/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="add-employee">
+      <button class="m-btn m-btn-defalut">
+        <div class="m-btn-icon icon-add"></div>
+        <div class="text-add">Thêm nhân viên</div>
+      </button>
+    </div>
+    <br>
+    <input
+            type="text"
+            class="icon-search input-search"
+            style="width: 240px;"
+            placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại"
+          />
+    <br><br>
+    <div class="row" style="display: block;">
+      <label for="">Combobox</label>
+      <div class="combobox">
+        <input type="text">
+        <button class="btn-combobox"><i class="fas fa-chevron-down"></i></button>
+        <div class="combobox-data">
+          <div class="combobox-item">
+            <div class="combobox-item-icon icon-combobox-selected"><i class="fas fa-check"></i></div>
+            <div class="combobox-item-text">Nam</div>
+          </div>
+          <div class="combobox-item">
+            <div class="combobox-item-icon icon-combobox-selected"><i class="fas fa-check"></i></div>
+            <div class="combobox-item-text">Nam</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br><br><br><br><br><br><br>
+    <div class="row" style="display: block;">
+      <label for="">Dropdown</label>
+      <div class="dropdown">
+        <div class="dropdown-text">Loại hồ sơ</div>
+        <div class="dropdown-icon-delete"><i class="fas fa-times"></i></div>
+        <div class="dropdown-icon"><i class="fas fa-chevron-down"></i></div>
+        <div class="dropdown-data">
+          <div class="dropdown-item">
+            <div class="dropdown-item-icon icon-dropdown-selected"><i class="fas fa-check"></i></div>
+            <div class="dropdown-item-text">Nam</div>
+          </div>
+          <div class="dropdown-item">
+            <div class="dropdown-item-icon icon-dropdown-selected"><i class="fas fa-check"></i></div>
+            <div class="dropdown-item-text">Nam</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+    <input type="text" class="test">
+
+    <script src="/lib/jquery-3.6.0.min.js"></script>
+    <script src="/js/common/common.js"></script>
+    <script src="/js/page/employee.js"></script>
+    <script src="/js/common/dropdown.js"></script>
+  </body>
+</html>

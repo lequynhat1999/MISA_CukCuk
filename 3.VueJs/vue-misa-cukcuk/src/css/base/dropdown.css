@@ -1,156 +1,126 @@
-.dropdown
-{
-    display: flex;
-    align-items: center;
-    box-sizing: border-box;
-    position: relative;
-    width: 180px;
-    height: 40px;
-    border: 1px solid #BBBBBB;
-    border-radius: 4px;
-    outline: none;
-    white-space: nowrap;
+.dropdown {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  position: relative;
+  width: 180px;
+  height: 40px;
+  border: 1px solid #bbbbbb;
+  border-radius: 4px;
+  outline: none;
+  white-space: nowrap;
 }
 
-.dropdown:hover
-{
-    cursor: pointer;
+.dropdown:hover {
+  cursor: pointer;
 }
 
-.dropdown:active
-{
-    border-color: #019150;
+.dropdown:active {
+  border-color: #019150;
 }
 
-.dropdown .dropdown-text
-{
-    padding-left: 16px;
+.dropdown .dropdown-text {
+  padding-left: 16px;
 }
 
-.dropdown .dropdown-icon
-{
-    position: absolute;
-    right: 12px;
-    width: 16px;
-    height: 16px;
-    margin-left: 10px;
+.dropdown .dropdown-icon {
+  position: absolute;
+  right: 12px;
+  width: 16px;
+  height: 16px;
+  margin-left: 10px;
 }
 
-.dropdown-hidden
-{
-    display: none;
+.dropdown-hidden {
+  display: none;
 }
 
-.dropdown .dropdown-data
-{
-    /* display: none; */
-    position: absolute;
-    top: 42px;
-    width: 100%;
-    z-index: 999;
-    border-radius: 4px;
-    padding-bottom: 4px;
-    box-shadow: 0px 8px 8px 0px #ccc;
-    background-color: #fff;
+.dropdown .dropdown-data {
+  /* display: none; */
+  position: absolute;
+  top: 42px;
+  width: 100%;
+  z-index: 999;
+  border-radius: 4px;
+  padding-bottom: 4px;
+  box-shadow: 0px 8px 8px 0px #ccc;
+  background-color: #fff;
 }
 
-.dropdown .dropdown-data .dropdown-item
-{
-    display: flex;
-    align-items: center;
-    height: 40px;
-    width: 100%;
-    /* line-height: 40px; */
-    /* border: 1px solid #888888; */
-    cursor: pointer;
-    box-sizing: border-box;
+.dropdown .dropdown-data .dropdown-item {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  width: 100%;
+  /* line-height: 40px; */
+  /* border: 1px solid #888888; */
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.dropdown .dropdown-data .dropdown-item:hover
-{
-    background-color: #E9EBEE;
+.dropdown .dropdown-data .dropdown-item:hover {
+  background-color: #e9ebee;
 }
 
-.dropdown .dropdown-data .dropdown-item-selected
-{
-    background-color: #019150;
+.dropdown .dropdown-data .dropdown-item-selected {
+  background-color: #019150;
 }
 
-
-.dropdown .dropdown-data .dropdown-item .dropdown-item-icon
-{
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-    margin: auto 10px;
-    visibility: hidden;
+.dropdown .dropdown-data .dropdown-item .dropdown-item-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin: auto 10px;
+  visibility: hidden;
 }
 
-.dropdown-title-header
-{
-    border: none;
-    font-size: 15px;
-    font-weight: bolder;
-    margin-left: 8px;
-    width: 190px;
-    
+.dropdown-title-header {
+  border: none;
+  font-size: 15px;
+  font-weight: bolder;
+  margin-left: 8px;
+  width: 190px;
 }
 
-.dropdown-filter
-{
-    margin-left: 12px;
+.dropdown-filter {
+  margin-left: 12px;
 }
 
-.box-dropdown .dropdown
-{
-    width: 100%;
+.box-dropdown .dropdown {
+  width: 100%;
 }
 
-.bg
-{
-    background-color: #019160;
-    color: #fff;
+.bg {
+  background-color: #019160;
+  color: #fff;
 }
 
-.dropdown-icon-delete
-{
-    position: absolute;
-    right: 40px;
-    margin-left: 12px;
+.dropdown-icon-delete {
+  position: absolute;
+  right: 40px;
+  margin-left: 12px;
 }
 
-.icon-delete-hidden
-{
-    display: none;
+.icon-delete-hidden {
+  display: none;
 }
 
-.dropdown .dropdown-data .dropdown-item .icon-dropdown-selected
-{
-    visibility:visible;
-    color: #fff;
+.dropdown .dropdown-data .dropdown-item .icon-dropdown-selected {
+  visibility: visible;
+  color: #fff;
 }
 
-.dropdown-selected
-{
-    background-color: #019160;
-    color: #fff;
+.dropdown-selected {
+  background-color: #019160;
+  color: #fff;
 }
 
-.dropdown .dropdown-data .dropdown-selected:hover
-{
-    background-color: #019160;
-    color: #fff;
+.dropdown .dropdown-data .dropdown-selected:hover {
+  background-color: #019160;
+  color: #fff;
 }
 
-.rotate
-{
-    -moz-transform: rotate(180deg);
-
-    -webkit-transform: rotate(180deg);
-
-    -o-transform: rotate(180deg);
-
-    -ms-transform: rotate(180deg);
-
-    transform: rotate(180deg);
+.rotate {
+  -webkit-transform: rotateX(180deg);
+  transform: rotateX(180deg);
 }
