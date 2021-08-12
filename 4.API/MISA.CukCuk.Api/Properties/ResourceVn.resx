@@ -123,6 +123,15 @@
   <data name="Dev_ErrorMsg_FormatEmail" xml:space="preserve">
     <value>Email không đúng định dạng</value>
   </data>
+  <data name="Dev_ErrorMsg_Null_Email" xml:space="preserve">
+    <value>Email không được phép null</value>
+  </data>
+  <data name="Dev_ErrorMsg_Null_FullName" xml:space="preserve">
+    <value>FullName không được phép null</value>
+  </data>
+  <data name="Dev_ErrorMsg_Null_PhoneNumber" xml:space="preserve">
+    <value>PhoneNumber không được phép null</value>
+  </data>
   <data name="Dev_ErrorMsg__Null_CustomerCode" xml:space="preserve">
     <value>CustomerCode không được phép null</value>
   </data>
@@ -135,7 +144,19 @@
   <data name="User_ErrorMsg_FormatEmail" xml:space="preserve">
     <value>Email không đúng định dạng</value>
   </data>
+  <data name="User_ErrorMsg_NoContent" xml:space="preserve">
+    <value>Không có dữ liệu</value>
+  </data>
   <data name="User_ErrorMsg_Null_CustomerCode" xml:space="preserve">
     <value>Mã khách hàng không được phép để trống</value>
+  </data>
+  <data name="User_ErrorMsg_Null_Email" xml:space="preserve">
+    <value>Email không được phép để trống</value>
+  </data>
+  <data name="User_ErrorMsg_Null_FullName" xml:space="preserve">
+    <value>Họ và tên khách hàng không được phép để trống</value>
+  </data>
+  <data name="User_ErrorMsg_Null_PhoneNumber" xml:space="preserve">
+    <value>Số điện thoại không được phép để trống</value>
   </data>
 </root>

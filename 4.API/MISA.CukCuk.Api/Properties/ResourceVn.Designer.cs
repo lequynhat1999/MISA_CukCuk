@@ -88,6 +88,33 @@ namespace MISA.CukCuk.Api.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email không được phép null.
+        /// </summary>
+        public static string Dev_ErrorMsg_Null_Email {
+            get {
+                return ResourceManager.GetString("Dev_ErrorMsg_Null_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to FullName không được phép null.
+        /// </summary>
+        public static string Dev_ErrorMsg_Null_FullName {
+            get {
+                return ResourceManager.GetString("Dev_ErrorMsg_Null_FullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to PhoneNumber không được phép null.
+        /// </summary>
+        public static string Dev_ErrorMsg_Null_PhoneNumber {
+            get {
+                return ResourceManager.GetString("Dev_ErrorMsg_Null_PhoneNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Có lỗi xảy ra, vui lòng liên hệ cho MISA.
         /// </summary>
         public static string Exception_ErrorMsg {
@@ -115,11 +142,47 @@ namespace MISA.CukCuk.Api.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Không có dữ liệu.
+        /// </summary>
+        public static string User_ErrorMsg_NoContent {
+            get {
+                return ResourceManager.GetString("User_ErrorMsg_NoContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Mã khách hàng không được phép để trống.
         /// </summary>
         public static string User_ErrorMsg_Null_CustomerCode {
             get {
                 return ResourceManager.GetString("User_ErrorMsg_Null_CustomerCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Email không được phép để trống.
+        /// </summary>
+        public static string User_ErrorMsg_Null_Email {
+            get {
+                return ResourceManager.GetString("User_ErrorMsg_Null_Email", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Họ và tên khách hàng không được phép để trống.
+        /// </summary>
+        public static string User_ErrorMsg_Null_FullName {
+            get {
+                return ResourceManager.GetString("User_ErrorMsg_Null_FullName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Số điện thoại không được phép để trống.
+        /// </summary>
+        public static string User_ErrorMsg_Null_PhoneNumber {
+            get {
+                return ResourceManager.GetString("User_ErrorMsg_Null_PhoneNumber", resourceCulture);
             }
         }
     }

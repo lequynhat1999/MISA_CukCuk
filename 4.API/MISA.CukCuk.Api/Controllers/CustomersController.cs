@@ -18,6 +18,8 @@ namespace MISA.CukCuk.Api.Controllers
     [ApiController]
     public class CustomersController : ControllerBase
     {
+        #region Methods
+
         /// <summary>
         /// Lấy ra tất cả thông tin của khách hàng trong database
         /// </summary>
@@ -52,7 +54,11 @@ namespace MISA.CukCuk.Api.Controllers
                 }
                 else
                 {
-                    return StatusCode(204);
+                    var msg = new
+                    {
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_NoContent,
+                    };
+                    return StatusCode(204, msg);
                 }
             }
             catch (Exception ex)
@@ -103,7 +109,11 @@ namespace MISA.CukCuk.Api.Controllers
                 }
                 else
                 {
-                    return StatusCode(204);
+                    var msg = new
+                    {
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_NoContent,
+                    };
+                    return StatusCode(204, msg);
                 }
             }
             catch (Exception ex)
@@ -145,7 +155,7 @@ namespace MISA.CukCuk.Api.Controllers
             try
             {
                 // Validate dữ liệu
-                // Check trường mã bắt buộc nhập:
+                // Check trường mã khách hàng bắt buộc nhập:
                 var customerCode = customer.CustomerCode;
                 if (string.IsNullOrEmpty(customerCode))
                 {
@@ -157,7 +167,43 @@ namespace MISA.CukCuk.Api.Controllers
                     return StatusCode(400, msg);
                 }
 
-                // check email
+                // Check họ và tên khách hàng bắt buộc nhập
+                var customerFullName = customer.FullName;
+                if (string.IsNullOrEmpty(customerFullName))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_FullName,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_FullName,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // Check Email bắt buộc nhập
+                var customerEmail = customer.Email;
+                if (string.IsNullOrEmpty(customerEmail))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_Email,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_Email,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // Check SĐT bắt buộc nhập
+                var customerPhoneNumber = customer.PhoneNumber;
+                if (string.IsNullOrEmpty(customerPhoneNumber))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_PhoneNumber,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_PhoneNumber,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // check email đúng định dạng
                 var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
                 var isMatch = Regex.IsMatch(customer.Email, emailFormat, RegexOptions.IgnoreCase);
                 if (isMatch == false)
@@ -236,7 +282,7 @@ namespace MISA.CukCuk.Api.Controllers
                 // trả kết quả về cho client
                 if (rowAffect > 0)
                 {
-                    return StatusCode(201, customer);
+                    return StatusCode(201, rowAffect);
                 }
                 else
                 {
@@ -276,6 +322,42 @@ namespace MISA.CukCuk.Api.Controllers
                     {
                         devMsg = Properties.ResourceVn.Dev_ErrorMsg__Null_CustomerCode,
                         userMsg = Properties.ResourceVn.User_ErrorMsg_Null_CustomerCode,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // Check họ và tên khách hàng bắt buộc nhập
+                var customerFullName = customerUpdate.FullName;
+                if (string.IsNullOrEmpty(customerFullName))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_FullName,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_FullName,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // Check Email bắt buộc nhập
+                var customerEmail = customerUpdate.Email;
+                if (string.IsNullOrEmpty(customerEmail))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_Email,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_Email,
+                    };
+                    return StatusCode(400, msg);
+                }
+
+                // Check SĐT bắt buộc nhập
+                var customerPhoneNumber = customerUpdate.PhoneNumber;
+                if (string.IsNullOrEmpty(customerPhoneNumber))
+                {
+                    var msg = new
+                    {
+                        devMsg = Properties.ResourceVn.Dev_ErrorMsg_Null_PhoneNumber,
+                        userMsg = Properties.ResourceVn.User_ErrorMsg_Null_PhoneNumber,
                     };
                     return StatusCode(400, msg);
                 }
@@ -442,6 +524,8 @@ namespace MISA.CukCuk.Api.Controllers
             // 4. trả về client
             return customer;
         }
+        #endregion
+
 
     }
 
