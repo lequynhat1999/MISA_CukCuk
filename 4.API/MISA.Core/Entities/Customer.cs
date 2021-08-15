@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.Infrastructure.Model
+namespace MISA.Core.Entities
 {
-    public class Customer
+    public class Customer : Base
     {
         #region Property
         /// <summary>

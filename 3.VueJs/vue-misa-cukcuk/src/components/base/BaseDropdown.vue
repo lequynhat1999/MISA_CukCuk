@@ -162,6 +162,18 @@ export default {
         this.isRotate = false;
       }
     },
+
+    /**------------------------------------------------------
+     * Hàm bắt sự kiện nút reload
+     * khi reload sẽ đưa text dropdown về mặc định
+     * CreateBy: LQNhat(14/08/2021)
+     */
+    setTextDefault()
+    {
+      this.selectedText = this.items[0].Text;
+      this.selectedValue = this.items[0].Value;
+      this.currentIndex = 0;
+    }
   },
 
   mounted() {

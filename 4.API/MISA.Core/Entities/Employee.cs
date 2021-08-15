@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.CukCuk.Api.Model
+namespace MISA.Core.Entities
 {
-    public class Employee:Base
+    public class Employee : Base
     {
         #region Property
         /// <summary>
@@ -84,9 +85,19 @@ namespace MISA.CukCuk.Api.Model
         public Guid DepartmentId { get; set; }
 
         /// <summary>
+        /// Tên phòng ban
+        /// </summary>
+        public string DepartmentName { get; set; }
+
+        /// <summary>
         /// Id vị trí
         /// </summary>
         public Guid PositionId { get; set; }
+
+        /// <summary>
+        /// Tên chức vụ 
+        /// </summary>
+        public string PositionName { get; set; }
 
         /// <summary>
         /// Số của trạng thái công việc

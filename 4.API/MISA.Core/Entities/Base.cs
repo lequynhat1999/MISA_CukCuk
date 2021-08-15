@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.CukCuk.Api.Model
+namespace MISA.Core.Entities
 {
     public class Base
     {
@@ -11,7 +12,7 @@ namespace MISA.CukCuk.Api.Model
         /// <summary>
         /// Ngày tạo
         /// </summary>
-        //public DateTime? CreateDate { get; set; }
+        public DateTime? CreatedDate { get; set; }
 
         /// <summary>
         /// Tạo bởi

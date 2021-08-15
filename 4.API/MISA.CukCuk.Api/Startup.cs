@@ -7,6 +7,10 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using MISA.Core.Interfaces.Repository;
+using MISA.Core.Interfaces.Services;
+using MISA.Core.Services;
+using MISA.Infrastructure.Repository;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +30,7 @@ namespace MISA.CukCuk.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddCors();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -37,6 +41,15 @@ namespace MISA.CukCuk.Api
             {
                 jsonOptions.JsonSerializerOptions.PropertyNamingPolicy = null;
             });
+
+            services.AddScoped<ICustomerService, CustomerService>();
+            services.AddScoped<ICustomerRepository, CustomerRepository>();
+            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddScoped<IEmployeeService, EmployeeService>();
+            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            services.AddScoped<IDepartmentService, DepartmentService>();
+            services.AddScoped<IPositionRepository, PositionRepository>();
+            services.AddScoped<IPositionService, PositionService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -52,7 +65,11 @@ namespace MISA.CukCuk.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true)
+                .AllowCredentials()); // allow credentials
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

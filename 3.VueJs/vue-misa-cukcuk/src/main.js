@@ -9,14 +9,16 @@ import SlideUpDown from 'vue-slide-up-down';
 import money from 'v-money';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
-
-import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'; 
-import * as rules from 'vee-validate/dist/rules';
-import { messages } from 'vee-validate/dist/locale/vi.json';
 const options = {
   // You can set your default options here
   position: 'bottom-right'
 };
+
+
+import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'; 
+import * as rules from 'vee-validate/dist/rules';
+import { messages } from 'vee-validate/dist/locale/vi.json';
+
 Object.keys(rules).forEach(rule => {
   extend(rule, {
     ...rules[rule], // copies rule configuration

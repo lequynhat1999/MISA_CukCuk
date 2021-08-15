@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.CukCuk.Api.Model
+namespace MISA.Core.Entities
 {
-    public class CustomerGroup:Base
+    public class CustomerGroup : Base
     {
         #region Property
         /// <summary>
@@ -22,7 +23,7 @@ namespace MISA.CukCuk.Api.Model
         /// Mô tả
         /// </summary>
         public string Description { get; set; }
-        
+
         #endregion
     }
 }

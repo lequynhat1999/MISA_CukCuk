@@ -19,28 +19,20 @@
 </template>
 
 <script>
-import axios from "axios";
 export default {
     name: "BasePaging",
     data() {
       return {
-        amountPage: 0,
       }
     },
+    props:
+    {
+      amountPage: Number,
+    },
     created() {
-      this.loadData();
     },
     methods: {
-      loadData() {
-      axios
-        .get("http://cukcuk.manhnv.net/v1/Employees")
-        .then((res) => {
-          this.amountPage = res.data.length;
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
+      
     },
 };
 </script>

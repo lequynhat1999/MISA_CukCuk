@@ -6,24 +6,23 @@
     <table border="0" cellspacing="0" width="100%">
       <thead>
         <tr>
-          <th v-for="(item, index) in headers" :key="index" :style="{ 'text-align': item.align}" >
+          <th
+            v-for="(item, index) in headers"
+            :key="index"
+            :style="{ 'text-align': item.align }"
+          >
             {{ item.text }}
             <span v-html="iconSort"></span>
           </th>
         </tr>
       </thead>
-      <!-- @click="rowTableClick(employee.EmployeeId)"
-          @contextmenu.prevent="rightClickRow(employee)" -->
       <tbody>
-        <tr
-          v-for="employee in employees"
-          :key="employee.EmployeeId"
-        >
+        <tr v-for="employee in employees" :key="employee.EmployeeId">
           <td>{{ employee.EmployeeCode }}</td>
           <td :title="employee.FullName">
             {{ employee.FullName }}
           </td>
-          <td>{{ employee.GenderName }}</td>
+          <td>{{ formatGender(employee.Gender) }}</td>
           <td style="text-align: center">
             {{ formatDate(employee.DateOfBirth) }}
           </td>
@@ -38,13 +37,24 @@
           <td style="text-align: right">
             {{ formatPrice(employee.Salary) }}
           </td>
-          <td>{{ employee.WorkStatus }}</td>
+          <td>{{ formatWorkStatus(employee.WorkStatus) }}</td>
           <td>
             <div class="option-icon">
-              <i class="fas fa-edit icon-edit" @click="rowTableClick(employee.EmployeeId)" title="Sửa" ></i>
-              <i class="fas fa-trash-alt" @click.prevent="rightClickRow(employee)" title="Xóa"></i>
+              <i
+                class="fas fa-edit icon-edit"
+                @click="rowTableClick(employee.EmployeeId)"
+                title="Sửa"
+              ></i>
+              <i
+                class="fas fa-trash-alt"
+                @click.prevent="rightClickRow(employee)"
+                title="Xóa"
+              ></i>
             </div>
           </td>
+        </tr>
+        <tr v-if="employees.length == 0 ? true : false">
+          <td colspan="12" style="text-align: center">Không có dữ liệu để hiển thị</td>
         </tr>
       </tbody>
     </table>
@@ -67,7 +77,6 @@ export default {
       type: Array,
     },
     employees: {
-      type: Array,
     },
     isHidden: {
       type: Boolean,
@@ -108,10 +117,43 @@ export default {
 
     /**
      * Hàm format lương trên table
+     * CreateBy:LQNhat(1/8/2021)
      */
     formatPrice(value) {
       let val = (value / 1).toFixed(0).replace(".", ",");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    },
+    /**
+     * Hàm format về text của giới tính
+     * CreateBy:LQNhat(14/8/2021)
+     */
+    formatGender(value) {
+      switch (value) {
+        case 0:
+          return "Nữ";
+        case 1:
+          return "Nam";
+        case 2:
+          return "Không xác định";
+      }
+    },
+    /**
+     * Hàm format về text của trạng thái công việc
+     * CreateBy: LQNhat(14/08/2021)
+     */
+    formatWorkStatus(value) {
+      switch (value) {
+        case 0:
+          return "Làm chính thức";
+        case 1:
+          return "Đang thực tập";
+        case 2:
+          return "Đang học việc";
+        case 3:
+          return "Đang nghỉ phép";
+        case 4:
+          return "Đã nghỉ việc";
+      }
     },
   },
 };
@@ -119,14 +161,12 @@ export default {
 
 <style scoped>
 @import "../../css/common/table.css";
-.option-icon
-{
+.option-icon {
   text-align: center;
   font-size: 16px;
 }
 
-.icon-edit
-{
-  padding-right : 8px;
+.icon-edit {
+  padding-right: 8px;
 }
 </style>

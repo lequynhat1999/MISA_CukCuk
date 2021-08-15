@@ -32,7 +32,7 @@
                       </div>
                       <div class="box-input">
                         <ValidationProvider
-                          rules="required"
+                          rules="required|minmax"
                           name="Mã nhân viên"
                           v-slot="{ errors }"
                         >
@@ -352,17 +352,22 @@ import moment from "moment";
 import { Money } from "v-money";
 import Dropdown from "../../components/base/BaseDropdown.vue";
 import { extend } from "vee-validate";
-import { email } from "vee-validate/dist/rules";
-extend("checkname", {
+
+extend('minmax', {
   validate(value) {
-    return {
-      required: true,
-      valid: ["", null, undefined].indexOf(value) === -1,
-    };
+    // to do
+    return value.length >= 1 && value.length <= 10;
   },
-  computesRequired: true,
+  message: 'Mã nhân viên phải < 10 ký tự'
 });
-extend("email", email);
+
+// extend('existcode', {
+//   validate(value) {
+//     checkEmployeeCode();
+
+//   },
+//   message: 'Mã nhân viên đã tồn tại'
+// });
 
 export default {
   name: "EmployeeDetail",
@@ -385,12 +390,12 @@ export default {
       nameDepartment: "department",
       dataDepartment: [],
       fieldsDepartment: ["DepartmentId", "DepartmentName"],
-      apiDepartment: "http://cukcuk.manhnv.net/api/Department",
+      apiDepartment: "https://localhost:44338/api/v1/departments",
       // data cho dropdown position
       namePosition: "position",
       dataPosition: [],
       fieldsPosition: ["PositionId", "PositionName"],
-      apiPosition: "http://cukcuk.manhnv.net/v1/Positions",
+      apiPosition: "https://localhost:44338/api/v1/positions",
       // data cho dropdown gender
       dataGender: [
         { Text: "Nam", Value: 1 },
@@ -404,7 +409,9 @@ export default {
       dataWorkStatus: [
         { Text: "Làm chính thức", Value: 0 },
         { Text: "Đang thực tập", Value: 1 },
-        { Text: "Đã nghỉ việc", Value: 2 },
+        { Text: "Đang học việc", Value: 2 },
+        { Text: "Đang nghỉ phép", Value: 3 },
+        { Text: "Đã nghỉ việc", Value: 4 },
       ],
       nameWorkStatus: "workStatus",
       fieldsWorkStatus: "",
@@ -436,17 +443,20 @@ export default {
       }
     },
 
+    /**-------------------------------------------------------------------
+     * Hàm check mã nhân viên đã tồn tại
+     * CreateBy:LQNhat(13/08/2021)
+     */
     checkEmployeeCode() {
       var self = this;
       // binding data
       axios
-        .get("http://cukcuk.manhnv.net/v1/Employees")
+        .get("https://localhost:44338/api/v1/employees")
         .then((res) => {
           self.employees = res.data;
           self.employees.forEach((item) => {
-            if (self.employee.EmployeeCode == item.EmployeeCode) {
+            if (self.employee.EmployeeCode == item.EmployeeCode && self.employee.EmployeeId != item.EmployeeId) {
               alert("Trùng mã nhân viên");
-              debugger; // eslint-disable-line
             }
           });
         })
@@ -500,12 +510,13 @@ export default {
     autoNewEmployeeCode() {
       let self = this;
       axios
-        .get(`http://cukcuk.manhnv.net/v1/Employees/NewEmployeeCode`)
+        .get(`https://localhost:44338/api/v1/employees/newEmployeeCode`)
         .then((res) => {
           let newEmployee = {};
           newEmployee.EmployeeCode = res.data;
           self.employee = newEmployee;
           self.$refs.txtEmployeeCode.focus();
+          
         })
         .catch((err) => {
           console.log(err);
@@ -540,7 +551,7 @@ export default {
       var self = this;
       self.checkEmployeeCode();
       axios
-        .post(`http://cukcuk.manhnv.net/v1/Employees`, self.employee)
+        .post(`https://localhost:44338/api/v1/employees`, self.employee)
         .then((res) => {
           self.$emit("loadData");
           self.$emit("closeForm");
@@ -563,7 +574,7 @@ export default {
       self.checkEmployeeCode();
       axios
         .put(
-          `http://cukcuk.manhnv.net/v1/Employees/${self.employeeId}`,
+          `https://localhost:44338/api/v1/employees/${self.employeeId}`,
           self.employee
         )
         .then((res) => {
@@ -586,7 +597,7 @@ export default {
       var self = this;
       // call api
       axios
-        .get(`http://cukcuk.manhnv.net/v1/Employees/${self.employeeId}`)
+        .get(`https://localhost:44338/api/v1/employees/${self.employeeId}`)
         .then((res) => {
           self.employee = res.data;
           // format salary,date về đúng định dạng

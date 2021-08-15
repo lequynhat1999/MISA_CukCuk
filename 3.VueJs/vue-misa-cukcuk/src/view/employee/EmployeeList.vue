@@ -17,7 +17,7 @@
             class="icon-search input-search"
             style="width: 250px"
             placeholder="Tìm kiếm theo Mã, Tên hoặc Số điện thoại"
-            v-model="dataInput"
+            v-model="keysearch"
             @input="openIconDelete"
           />
           <div
@@ -28,11 +28,15 @@
           </div>
         </div>
         <Dropdown
+          ref="textDropdownPostion"
+          @get="getValDepartment"
           :url="apiDepartment"
           :fields="fieldsDepartment"
           :data="dataDepartment"
         />
         <Dropdown
+          ref="textDropdownDepartment"
+          @get="getValPosition"
           :url="apiPosition"
           :fields="fieldsPosition"
           :data="dataPosition"
@@ -42,7 +46,7 @@
         <div class="filter-right-btn">
           <button
             class="m-second-button m-btn-refresh"
-            @click="loadData"
+            @click="reloadTableAndFilter"
           ></button>
         </div>
       </div>
@@ -57,10 +61,10 @@
       @deleteRow="deleteRow"
     ></Table>
 
-    <Paging></Paging>
+    <Paging :amountPage="amountPage"> </Paging>
 
     <EmployeeDetailDialog
-      :isHidden="isHidden" 
+      :isHidden="isHidden"
       :mode="modeFormDetail"
       ref="modeForm"
       @cancelFormDetail="cancelFormDetail"
@@ -80,17 +84,17 @@
 
 <script>
 let headers = [
-  { text: "Mã nhân viên", attrName: "EmployeeCode", align: "left"},
-  { text: "Họ và tên", attrName: "FullName", align: "left"},
-  { text: "Giới tính", attrName: "GenderName", align: "left" },
-  { text: "Ngày sinh", attrName: "DateOfBirth", align: "center" },
-  { text: "Số điện thoại", attrName: "PhoneNumber", align: "left"},
-  { text: "Email", attrName: "Email", align: "left"},
-  { text: "Vị trí", attrName: "PositionName" , align: "left"},
-  { text: "Phòng ban", attrName: "DepartmentName" , align: "left"},
-  { text: "Mức lương cơ bản", attrName: "Salary", align: "right" },
-  { text: "Tình trạng công việc", attrName: "WorkStatus" , align: "left"},
-  { text: "Thao tác" ,align: "left"},
+  { text: "Mã nhân viên", align: "left" },
+  { text: "Họ và tên", align: "left" },
+  { text: "Giới tính", align: "left" },
+  { text: "Ngày sinh", align: "center" },
+  { text: "Số điện thoại", align: "left" },
+  { text: "Email", align: "left" },
+  { text: "Vị trí", align: "left" },
+  { text: "Phòng ban", align: "left" },
+  { text: "Mức lương cơ bản", align: "right" },
+  { text: "Tình trạng công việc", align: "left" },
+  { text: "Thao tác", align: "left" },
 ];
 import axios from "axios";
 import EmployeeDetailDialog from "../employee/EmployeeDetail.vue";
@@ -111,8 +115,9 @@ export default {
   },
   data() {
     return {
+      // số bản ghi trong 1 trang
+      amountPage: 0,
       // dữ liệu người dùng nhập vào trên thanh input search
-      dataInput: "",
       // header cho table
       headers: headers,
       // 1 object nhân viên
@@ -134,42 +139,116 @@ export default {
       // props cho dropdown department
       dataDepartment: [{ Text: "Tất cả phòng ban", Value: "" }],
       fieldsDepartment: ["DepartmentId", "DepartmentName"],
-      apiDepartment: "http://cukcuk.manhnv.net/api/Department",
+      apiDepartment: "https://localhost:44338/api/v1/departments",
       // props cho dropdown position
       dataPosition: [{ Text: "Tất cả vị trí", Value: "" }],
       fieldsPosition: ["PositionId", "PositionName"],
-      apiPosition: "http://cukcuk.manhnv.net/v1/Positions",
+      apiPosition: "https://localhost:44338/api/v1/positions",
+      // data cho việc filter
+      keysearch: "",
+      departmentId: "",
+      positionId: "",
+      pageIndex: 1,
+      pageSize: 10,
     };
   },
   created() {
     //load dữ liệu lên table
     this.loadData();
+    this.getEmployeesByFilter(
+      this.pageIndex,
+      this.pageSize,
+      this.positionId,
+      this.departmentId,
+      this.keysearch
+    );
   },
   methods: {
+    getEmployeesByFilter() {
+      var self = this;
+      axios
+        .get(
+          `https://localhost:44338/api/v1/employees/filter?pageIndex=${
+            (this.pageIndex - 1) * this.pageSize
+          }
+        &pageSize=${this.pageSize}&positionId=${this.positionId}&departmentId=${
+            this.departmentId
+          }&keysearch=${this.keysearch}`
+        )
+        .then((res) => {
+          self.employees = res.data;
+          debugger; // eslint-disable-lineF
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    /**---------------------------------------------------
+     * Hàm set value position để filter
+     * CreateBy:LQNhat(2/8/2021)
+     */
+    getValPosition(position) {
+      this.positionId = position;
+      console.log(this.positionId);
+      this.getEmployeesByFilter(
+        this.pageIndex,
+        this.pageSize,
+        this.positionId,
+        this.departmentId,
+        this.keysearch
+      );
+    },
+    /**---------------------------------------------------
+     * Hàm set value department để filter
+     * CreateBy:LQNhat(2/8/2021)
+     */
+    getValDepartment(department) {
+      this.departmentId = department;
+      console.log(this.departmentId);
+      this.getEmployeesByFilter(
+        this.pageIndex,
+        this.pageSize,
+        this.positionId,
+        this.departmentId,
+        this.keysearch
+      );
+    },
+
     /**----------------------------------------------------
      * Hàm bắt sự kiện click nút xóa trên input search
      * CreateBy: LQNhat(30/07/2021)
      */
     clearValueInput() {
-      this.dataInput = "";
+      this.keysearch = "";
       this.isClose = true;
+      // load lại table
+      this.loadData();
     },
     /**-----------------------------------------------------------
      * Hàm bắt sự kiện hiển thị nút xóa khi nhập vào input search
+     * khi có text thì search theo text
      * CreateBy: LQNhat(30/07/2021)
      */
     openIconDelete() {
-      if (this.dataInput == "") {
+      if (this.keysearch == "") {
         this.isClose = true;
+        this.loadData();
       } else {
         this.isClose = false;
+        this.getEmployeesByFilter(
+          this.pageIndex,
+          this.pageSize,
+          this.positionId,
+          this.departmentId,
+          this.keysearch
+        );
       }
     },
     /**-------------------------------------------------------
      * Hàm đóng form chi tiết khi click vào btn trên form
      * CreateBy: LQNhat(6/8/2021)
      */
-    cancelFormDetail(mode){
+    cancelFormDetail(mode) {
       this.isHidden = !this.isHidden;
       this.modeFormDetail = mode;
     },
@@ -189,7 +268,6 @@ export default {
      */
     rowClick(employeeId) {
       this.isHidden = !this.isHidden;
-      // this.employeeId = employeeId;
       this.modeFormDetail = 1;
       this.$refs.modeForm.show(this.modeFormDetail, employeeId);
     },
@@ -202,6 +280,27 @@ export default {
       this.employee = employee;
       this.employeeId = employee.EmployeeId;
     },
+    /**---------------------------------------------------------------
+     * Hàm reload table và các control filter
+     * CreateBy: LQNhat(14/08/2021)
+     */
+    reloadTableAndFilter() {
+      var self = this;
+      // binding data
+      axios
+        .get("https://localhost:44338/api/v1/employees")
+        .then((res) => {
+          self.employees = res.data;
+          self.amountPage = res.data.length;
+          self.$refs.textDropdownPostion.setTextDefault();
+          self.$refs.textDropdownDepartment.setTextDefault();
+          self.keysearch = "";
+          self.isClose = true;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
     /**-----------------------------------
      * Hàm binding data lên table
      * CreateBy: LQNhat(31/07/2021)
@@ -210,9 +309,10 @@ export default {
       var self = this;
       // binding data
       axios
-        .get("http://cukcuk.manhnv.net/v1/Employees")
+        .get("https://localhost:44338/api/v1/employees")
         .then((res) => {
           self.employees = res.data;
+          self.amountPage = res.data.length;
         })
         .catch((res) => {
           console.log(res);
@@ -239,7 +339,7 @@ export default {
     confirmDelete() {
       var self = this;
       axios
-        .delete(`http://cukcuk.manhnv.net/v1/Employees/${this.employeeId}`)
+        .delete(`https://localhost:44338/api/v1/employees/${this.employeeId}`)
         .then((res) => {
           console.log(res);
           self.isHiddenDelete = !self.isHiddenDelete;

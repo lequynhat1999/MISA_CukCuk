@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
-namespace MISA.CukCuk.Api.Model
+namespace MISA.Core.Entities
 {
-    public class Department:Base
+    public class Department : Base
     {
         #region Property
         /// <summary>
@@ -22,7 +23,7 @@ namespace MISA.CukCuk.Api.Model
         /// Tên phòng ban
         /// </summary>
         public string DepartmentName { get; set; }
-        
+
         /// <summary>
         /// Mô tả
         /// </summary>
