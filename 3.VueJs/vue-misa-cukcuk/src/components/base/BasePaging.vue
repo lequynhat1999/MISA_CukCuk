@@ -1,42 +1,141 @@
 <template>
   <div class="paging">
-    <div class="text-paging">Hiển thị 1-10/1000 nhân viên</div>
+    <div class="text-paging">
+      Hiển thị {{ this.start }}-{{ this.end}}/{{ this.amount }} nhân viên
+    </div>
     <div class="pagination">
-      <div class="back-to-start"></div>
-      <div class="pre-page"></div>
+      <div class="back-to-start" @click="clickNumberPage(1)"></div>
+      <div
+        class="pre-page"
+        @click="clickNumberPage(indexCurrent - 1 < 1 ? 1 : indexCurrent - 1)"
+      ></div>
       <div class="number-page">
-        <div class="circle-number paging-active"><div class="page-number">1</div></div>
-        <div class="circle-number"><div class="page-number">2</div></div>
-        <div class="circle-number"><div class="page-number">3</div></div>
+        <a
+          class="circle-number"
+          v-for="index in numPages"
+          :key="index"
+          :class="index == indexCurrent ? 'paging-active' : ''"
+          @click="clickNumberPage(index)"
+        >
+          <div class="page-number">{{index}}</div>
+        </a>
       </div>
-      <div class="next-page"></div>
-      <div class="go-to-end"></div>
+      <div class="next-page" @click="clickNumberPage(indexCurrent + 1 > numPages ? numPages : indexCurrent + 1)"></div>
+      <div class="go-to-end" @click="clickNumberPage(numPages)"></div>
     </div>
     <div class="totalPage">
-      <span class="amountPage">{{this.amountPage}}</span> nhân viên trên 1 trang
+      <span class="amountPage">{{ this.pageSize }}</span> nhân viên trên 1 trang
     </div>
   </div>
 </template>
 
 <script>
+import axios from "axios";
 export default {
-    name: "BasePaging",
-    data() {
-      return {
-      }
+  name: "BasePaging",
+  data() {
+    return {
+      start: 0,
+      end: 0,
+      numPages: 0,
+      indexCurrent: 0,
+      amount: 0,
+    };
+  },
+  props: ["pageIndex", "pageSize"],
+  async created() {
+    await this.loadData();
+     this.paging();
+  },
+  methods: {
+    /**---------------------------------------------------
+     * Lấy toàn bộ danh sách
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    async loadData() {
+      var self = this;
+      // binding data
+      await axios
+        .get("https://localhost:44338/api/v1/employees")
+        .then((res) => {
+          self.amount = res.data.length;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
     },
-    props:
+
+    /**----------------------------------------------------------
+     * Chuyển trang
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    clickNumberPage(index)
     {
-      amountPage: Number,
+      this.indexCurrent = index;
+      if(this.indexCurrent < this.numPages)
+      {
+        this.start = (this.indexCurrent -1)*this.pageSize +1;
+        this.end = this.start + this.pageSize -1;
+      }
+      else
+      {
+        this.start = (this.indexCurrent -1)*this.pageSize +1;
+        this.end = this.amount;
+      }
+      this.$emit("paging",this.indexCurrent);
     },
-    created() {
+
+    /**-------------------------------------------------------------------
+     * Phân trang
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    paging()
+    {
+      if(this.amount % this.pageSize == 0)
+      {
+        this.numPages = this.amount / this.pageSize;
+      }
+      else
+      {
+        this.numPages = Math.floor(this.amount / this.pageSize) + 1;
+      }
+      this.indexCurrent = this.pageIndex;
+      this.start = this.indexCurrent;
+      this.end = this.pageSize;
     },
-    methods: {
-      
+
+    /**------------------------------------------------
+     * Khi click nút reload thì reset lại paging
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    resetPaging()
+    {
+      this.indexCurrent = 1;
+      this.start = this.indexCurrent;
+      this.end = this.pageSize;
     },
+
+    /**----------------------------------------------------------
+     * Hiển thị nhiều trang
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    // displayPaging()
+    // {
+    //   var total = this.numPages;
+    //   var current = this.indexCurrent;
+    //   if(current <= 3)
+    //   {
+    //     return [1,2,3];
+    //   }
+    //   else if(current > 3 && current < total - 1)
+    //   {
+
+    //   }
+    // }
+  },
 };
 </script>
 
 <style scoped>
-@import '../../css/common/paging.css';
+@import "../../css/common/paging.css";
 </style>

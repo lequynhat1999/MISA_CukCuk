@@ -1,5 +1,4 @@
 .table {
-  width: 100%;
   height: calc(100vh - 214px);
 }
 
@@ -21,6 +20,7 @@ td
 table
 {
   margin-left: 16px;
+  padding-right: 16px;
 }
 
 /* table tbody tr:nth-child(odd) {

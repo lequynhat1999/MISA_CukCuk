@@ -61,7 +61,13 @@
       @deleteRow="deleteRow"
     ></Table>
 
-    <Paging :amountPage="amountPage"> </Paging>
+    <Paging
+      :pageIndex = "pageIndex"
+      :pageSize = "pageSize"
+      ref="resetPaging"
+      @paging="paging"
+    > 
+    </Paging>
 
     <EmployeeDetailDialog
       :isHidden="isHidden"
@@ -116,7 +122,7 @@ export default {
   data() {
     return {
       // số bản ghi trong 1 trang
-      amountPage: 0,
+      amount: 0,
       // dữ liệu người dùng nhập vào trên thanh input search
       // header cho table
       headers: headers,
@@ -155,6 +161,7 @@ export default {
   created() {
     //load dữ liệu lên table
     this.loadData();
+    // lấy ra toàn bộ data
     this.getEmployeesByFilter(
       this.pageIndex,
       this.pageSize,
@@ -164,6 +171,10 @@ export default {
     );
   },
   methods: {
+    /*-----------------------------------------------------------------
+     *Lấy ra danh sách nhân viên theo các tiêu chí và phân trang
+     *CreateBy: LQNhat(14/08/2021)
+     */
     getEmployeesByFilter() {
       var self = this;
       axios
@@ -177,12 +188,13 @@ export default {
         )
         .then((res) => {
           self.employees = res.data;
-          debugger; // eslint-disable-lineF
+          // debugger; // eslint-disable-line
         })
         .catch((error) => {
           console.log(error);
         });
     },
+
     /**---------------------------------------------------
      * Hàm set value position để filter
      * CreateBy:LQNhat(2/8/2021)
@@ -198,6 +210,7 @@ export default {
         this.keysearch
       );
     },
+
     /**---------------------------------------------------
      * Hàm set value department để filter
      * CreateBy:LQNhat(2/8/2021)
@@ -244,6 +257,23 @@ export default {
         );
       }
     },
+    
+    /**----------------------------------------------------------
+     * Phân trang
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    paging(indexPage)
+    {
+      this.pageIndex = indexPage;
+      this.getEmployeesByFilter(
+          this.pageIndex,
+          this.pageSize,
+          this.positionId,
+          this.departmentId,
+          this.keysearch
+        );
+    },
+
     /**-------------------------------------------------------
      * Hàm đóng form chi tiết khi click vào btn trên form
      * CreateBy: LQNhat(6/8/2021)
@@ -296,6 +326,7 @@ export default {
           self.$refs.textDropdownDepartment.setTextDefault();
           self.keysearch = "";
           self.isClose = true;
+          self.$refs.resetPaging.resetPaging();
         })
         .catch((res) => {
           console.log(res);
@@ -312,7 +343,7 @@ export default {
         .get("https://localhost:44338/api/v1/employees")
         .then((res) => {
           self.employees = res.data;
-          self.amountPage = res.data.length;
+          self.amount = res.data.length;
         })
         .catch((res) => {
           console.log(res);
