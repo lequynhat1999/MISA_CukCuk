@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +13,16 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Khóa chính
         /// </summary>
+        [PrimaryKey]
+        [DisplayName("ID khách hàng")]
         public Guid CustomerId { get; set; }
 
         /// <summary>
         /// Mã khách hàng
         /// </summary>
+        [CheckExist]
+        [Required]
+        [DisplayName("Mã khách hàng")]
         public string CustomerCode { get; set; }
 
         /// <summary>
@@ -32,6 +38,8 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Họ và tên
         /// </summary>
+        [Required]
+        [DisplayName("Họ và tên")]
         public string FullName { get; set; }
 
         /// <summary>
@@ -52,11 +60,15 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Email
         /// </summary>
+        [CheckEmail]
+        [DisplayName("Email")]
         public string Email { get; set; }
 
         /// <summary>
         /// Số điện thoại
         /// </summary>
+        [Required]
+        [DisplayName("Số điện thoại")]
         public string PhoneNumber { get; set; }
 
         #endregion

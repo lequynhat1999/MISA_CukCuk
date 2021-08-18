@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,6 +18,8 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Mã nhân viên
         /// </summary>
+        [Required]
+        [CheckExist]
         public string EmployeeCode { get; set; }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Họ và tên
         /// </summary>
+        [Required]
         public string FullName { get; set; }
 
         /// <summary>
@@ -47,11 +51,14 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Số điện thoại
         /// </summary>
+        [Required]
         public string PhoneNumber { get; set; }
 
         /// <summary>
         /// Email
         /// </summary>
+        [Required]
+        [CheckEmail]
         public string Email { get; set; }
 
         /// <summary>
@@ -62,6 +69,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Số CMND/Căn cước
         /// </summary>
+        [Required]
         public string IdentityNumber { get; set; }
 
         /// <summary>
@@ -87,6 +95,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Tên phòng ban
         /// </summary>
+        [NotMap]
         public string DepartmentName { get; set; }
 
         /// <summary>
@@ -97,6 +106,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Tên chức vụ 
         /// </summary>
+        [NotMap]
         public string PositionName { get; set; }
 
         /// <summary>

@@ -179,9 +179,6 @@ export default {
   mounted() {
     document.addEventListener("click", this.close);
   },
-  // beforeDestroy() {
-  //   document.removeEventListener("click", this.close);
-  // },
 };
 </script>
 

@@ -17,11 +17,14 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Mã phòng ban
         /// </summary>
+        [CheckExist]
+        [Required]
         public string DepartmentCode { get; set; }
 
         /// <summary>
         /// Tên phòng ban
         /// </summary>
+        [Required]
         public string DepartmentName { get; set; }
 
         /// <summary>

@@ -16,87 +16,14 @@ namespace MISA.CukCuk.Api.Controllers
 {
     [Route("api/v1/[controller]")]
     [ApiController]
-    public class EmployeesController : ControllerBase
+    public class EmployeesController : BaseEntityController<Employee>
     {
         IEmployeeService _employeeService;
         IEmployeeRepository _employeeRepository;
-        public EmployeesController(IEmployeeService employeeService, IEmployeeRepository employeeRepository)
+        public EmployeesController(IEmployeeService employeeService, IEmployeeRepository employeeRepository) : base(employeeRepository, employeeService)
         {
             _employeeRepository = employeeRepository;
             _employeeService = employeeService;
-        }
-
-        /// <summary>
-        /// Lấy ra dữ liệu của toàn bộ nhân viên trong db
-        /// </summary>
-        /// <returns></returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        [HttpGet]
-        public IActionResult GetEmployees()
-        {
-            try
-            {
-                var employees = _employeeRepository.Get();
-                // 4. Trả về Client
-                if (employees.Count() > 0)
-                {
-                    return StatusCode(200, employees);
-                }
-                else
-                {
-                    var msg = new
-                    {
-                        userMsg = Properties.ResourceVnEmployee.User_ErrorMsg_NoContent,
-                    };
-                    return StatusCode(204, msg);
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
-                };
-                return StatusCode(500, msg);
-            }
-        }
-
-        /// <summary>
-        /// Lấy ra dữ liệu 1 nhân viên theo Id
-        /// </summary>
-        /// <param name="employeeId">Id nhân viên muốn lấy ra</param>
-        /// <returns></returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        [HttpGet("{employeeId}")]
-        public IActionResult GetEmployeeById(Guid employeeId)
-        {
-            try
-            {
-                var employee = _employeeRepository.GetById(employeeId);
-                // 4. trả về client
-                if (employee != null)
-                {
-                    return StatusCode(200, employee);
-                }
-                else
-                {
-                    var msg = new
-                    {
-                        userMsg = Properties.ResourceVnEmployee.User_ErrorMsg_NoContent,
-                    };
-                    return StatusCode(204, msg);
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
-                };
-                return StatusCode(500, msg);
-            }
         }
 
         /// <summary>
@@ -166,108 +93,5 @@ namespace MISA.CukCuk.Api.Controllers
             }
         }
 
-        /// <summary>
-        /// Thêm 1 nhân viên vào db
-        /// </summary>
-        /// <param name="employee">dữ liệu về nhân viên muốn thêm</param>
-        /// <returns>Số bản ghi được thêm vào trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        [HttpPost]
-        public IActionResult InsertEmployee(Employee employee)
-        {
-            try
-            {
-                var serviceResult = _employeeService.Add(employee);
-                // trả kết quả về cho client
-                if (serviceResult.MISACode == Core.MISAEnum.EnumServiceResult.Created)
-                {
-                    return StatusCode(201, serviceResult.Data);
-                }
-                else
-                {
-                    return BadRequest(serviceResult);
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
-                };
-                return StatusCode(500, msg);
-            }
-
-        }
-
-        /// <summary>
-        /// Sửa thông tin 1 nhân viên trong db
-        /// </summary>
-        /// <param name="employeeId">Id của nhân viên muốn sửa</param>
-        /// <param name="employee">Dữ liệu nhân viên muốn sửa</param>
-        /// <returns>Số bản ghi được sửa trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        [HttpPut("{employeeId}")]
-        public IActionResult UpdateEmployee(Employee employee, Guid employeeId)
-        {
-            try
-            {
-                var serviceResult = _employeeService.Update(employee, employeeId);
-                // 4. trả về cho client
-                if (serviceResult.MISACode == Core.MISAEnum.EnumServiceResult.Success)
-                {
-                    return StatusCode(200, serviceResult.Data);
-                }
-                else
-                {
-                    return BadRequest(serviceResult);
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
-                };
-                return StatusCode(500, msg);
-            }
-
-
-        }
-
-        /// <summary>
-        /// Xóa 1 nhân viên trong db
-        /// </summary>
-        /// <param name="employeeId">Id của nhân viên</param>
-        /// <returns>Số dòng được xóa trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        [HttpDelete("{employeeId}")]
-        public IActionResult DeleteEmployee(Guid employeeId)
-        {
-            try
-            {
-                // 4. trả kết quả về client
-                var result = _employeeRepository.Delete(employeeId);
-                if (result > 0)
-                {
-                    return StatusCode(200, result);
-                }
-                else
-                {
-                    return StatusCode(204);
-                }
-            }
-            catch (Exception ex)
-            {
-                var msg = new
-                {
-                    devMsg = ex.Message,
-                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
-                };
-                return StatusCode(500, msg);
-            }
-
-        }
     }
 }

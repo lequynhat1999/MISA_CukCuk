@@ -398,8 +398,8 @@ export default {
       apiPosition: "https://localhost:44338/api/v1/positions",
       // data cho dropdown gender
       dataGender: [
-        { Text: "Nam", Value: 1 },
         { Text: "Nữ", Value: 0 },
+        { Text: "Nam", Value: 1 },
         { Text: "Không xác định", Value: 2 },
       ],
       nameGender: "gender",

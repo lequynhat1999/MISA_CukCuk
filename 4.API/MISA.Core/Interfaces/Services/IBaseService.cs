@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace MISA.Core.Interfaces.Services
 {
-    public interface IDepartmentService : IBaseService<Department>
+    public interface IBaseService<TEntity>
     {
+        ServiceResult Add(TEntity entity);
+        ServiceResult Update(TEntity entity, Guid entityId);
 
     }
 }

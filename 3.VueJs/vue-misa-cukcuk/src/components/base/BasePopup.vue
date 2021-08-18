@@ -1,7 +1,7 @@
 <template>
   <div class="modal-delete" :class="{'modal-delete-hidden': isHiddenDelete }">
     <div class="modal-content-delete">
-      <span class="close-delete">&times;</span>
+      <span class="close-delete" @click="cancelDelete">&times;</span>
       <div class="header-delete">
         <div class="text-header-delete">Xóa bản ghi <span>{{employee.FullName}}</span> </div>
       </div>

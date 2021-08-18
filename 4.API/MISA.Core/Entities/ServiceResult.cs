@@ -17,7 +17,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Thông điệp nhận vào
         /// </summary>
-        //public string Message { get; set; }
+        public string Message { get; set; }
 
         /// <summary>
         /// Check sự hợp lệ

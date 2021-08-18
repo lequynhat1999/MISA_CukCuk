@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Microsoft.Extensions.Configuration;
 using MISA.Core.Entities;
 using MISA.Core.Interfaces.Repository;
 using MySqlConnector;
@@ -11,103 +12,18 @@ using System.Threading.Tasks;
 
 namespace MISA.Infrastructure.Repository
 {
-    public class EmployeeRepository : IEmployeeRepository
+    public class EmployeeRepository : BaseRepository<Employee>, IEmployeeRepository
     {
-        /// <summary>
-        /// Thêm 1 nhân viên vào db
-        /// </summary>
-        /// <param name="employee">dữ liệu về nhân viên muốn thêm</param>
-        /// <returns>Số bản ghi được thêm vào trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        public int Add(Employee employee)
+        #region Constructor
+        public EmployeeRepository(IConfiguration configuration) : base(configuration)
         {
-            // sinh id mới
-            employee.EmployeeId = Guid.NewGuid();
 
-            // ngày tạo mới
-            employee.CreatedDate = DateTime.UtcNow;
-            // chuỗi chứa tên cột
-            var columnsName = string.Empty;
-
-            // chuỗi chứa param
-            var columnsParam = string.Empty;
-
-            var properties = employee.GetType().GetProperties();
-
-            var param = new DynamicParameters();
-
-            foreach (var prop in properties)
-            {
-                var propName = prop.Name;
-
-                var propValue = prop.GetValue(employee);
-
-                columnsName += $"{propName},";
-                columnsParam += $"@{propName},";
-
-                param.Add($"@{propName}", propValue);
-
-            }
-            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-            columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-
-            // 1. kết nối vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-            // 3. thêm dữ liệu
-            var sqlQuery = $"INSERT INTO Employee({columnsName}) VALUES({columnsParam}) ";
-            var result = dbConnection.Execute(sqlQuery, param: param);
-            return result;
         }
+        #endregion
 
-        // <summary>
-        /// Xóa 1 nhân viên trong db
-        /// </summary>
-        /// <param name="employeeId">Id của nhân viên</param>
-        /// <returns>Số dòng được xóa trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        public int Delete(Guid? employeeId)
-        {
-            // 1. kết nối db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
 
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
 
-            // 3. xóa dữ liệu
-            var result = dbConnection.Execute("Proc_DeleteEmployee", new { _employeeId = employeeId }, commandType: CommandType.StoredProcedure);
-            return result;
-        }
-
-        /// <summary>
-        /// Lấy ra dữ liệu của toàn bộ nhân viên trong db
-        /// </summary>
-        /// <returns></returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        public IEnumerable<Employee> Get()
-        {
-            // 1. kết vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. Tạo đối tượng kết nối vào db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            // 3. Lấy dữ liệu
-            var employees = dbConnection.Query<Employee>("Proc_GetEmployees", commandType: CommandType.StoredProcedure);
-            return employees;
-        }
-
+        #region Methods
         /// <summary>
         /// Lấy ra 1 nhân viên theo mã nhân viên
         /// </summary>
@@ -133,28 +49,6 @@ namespace MISA.Infrastructure.Repository
             var employee = dbConnection.QueryFirstOrDefault<Employee>(sqlQuery, param: parameters);
 
             // 4. trả về client
-            return employee;
-        }
-
-        /// <summary>
-        /// Lấy ra dữ liệu 1 nhân viên theo Id
-        /// </summary>
-        /// <param name="employeeId">Id nhân viên muốn lấy ra</param>
-        /// <returns></returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        public Employee GetById(Guid employeeId)
-        {
-            // 1. kết nối vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            // 3. lấy dữ liệu
-            var employee = dbConnection.QueryFirstOrDefault<Employee>("Proc_GetEmployeeById", new { EmployeeId = employeeId }, commandType: CommandType.StoredProcedure);
             return employee;
         }
 
@@ -237,47 +131,8 @@ namespace MISA.Infrastructure.Repository
             string newEmployeeCode = "NV-" + (valueNewEmployeeCode + 1);
             return newEmployeeCode;
         }
+        #endregion
 
-        /// <summary>
-        /// Sửa thông tin 1 nhân viên trong db
-        /// </summary>
-        /// <param name="employeeId">Id của nhân viên muốn sửa</param>
-        /// <param name="employee">Dữ liệu nhân viên muốn sửa</param>
-        /// <returns>Số bản ghi được sửa trong db</returns>
-        /// CreateBy:LQNhat(09/08/2021)
-        public int Update(Employee employee, Guid employeeId)
-        {
-            // ngày chỉnh sửa
-            employee.ModifiedDate = DateTime.UtcNow;
-            var columnsName = string.Empty;
-            var param = new DynamicParameters();
-            var properties = employee.GetType().GetProperties();
-            foreach (var prop in properties)
-            {
-                var propName = prop.Name;
-                var propValue = prop.GetValue(employee);
 
-                columnsName += $"{propName} = @{propName},";
-                param.Add($"@{propName}", propValue);
-            }
-
-            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-
-            // 1. kết nối db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            // 3. sửa dữ liệu
-            DynamicParameters dynamicParameters = new DynamicParameters();
-            dynamicParameters.Add("@employeeId", employeeId);
-            var sqlQuery = $"UPDATE Employee SET {columnsName} WHERE EmployeeId = @employeeId";
-            var result = dbConnection.Execute(sqlQuery, param: param);
-            return result;
-        }
     }
 }

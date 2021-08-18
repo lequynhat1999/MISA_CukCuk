@@ -201,7 +201,6 @@ export default {
      */
     getValPosition(position) {
       this.positionId = position;
-      console.log(this.positionId);
       this.getEmployeesByFilter(
         this.pageIndex,
         this.pageSize,
@@ -217,7 +216,6 @@ export default {
      */
     getValDepartment(department) {
       this.departmentId = department;
-      console.log(this.departmentId);
       this.getEmployeesByFilter(
         this.pageIndex,
         this.pageSize,
@@ -344,6 +342,7 @@ export default {
         .then((res) => {
           self.employees = res.data;
           self.amount = res.data.length;
+          console.log(res.data);
         })
         .catch((res) => {
           console.log(res);

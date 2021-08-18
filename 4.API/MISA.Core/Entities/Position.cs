@@ -17,6 +17,7 @@ namespace MISA.Core.Entities
         /// <summary>
         /// Mã vị trí
         /// </summary>
+        [Required]
         public string PositionCode { get; set; }
 
         /// <summary>
