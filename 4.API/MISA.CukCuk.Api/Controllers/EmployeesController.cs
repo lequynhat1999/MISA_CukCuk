@@ -18,14 +18,19 @@ namespace MISA.CukCuk.Api.Controllers
     [ApiController]
     public class EmployeesController : BaseEntityController<Employee>
     {
+        #region DECLARE
         IEmployeeService _employeeService;
         IEmployeeRepository _employeeRepository;
+        #endregion
+        #region Constructor
         public EmployeesController(IEmployeeService employeeService, IEmployeeRepository employeeRepository) : base(employeeRepository, employeeService)
         {
             _employeeRepository = employeeRepository;
             _employeeService = employeeService;
         }
+        #endregion
 
+        #region Methods
         /// <summary>
         /// Tự sinh mã nhân viên mới
         /// </summary>
@@ -92,6 +97,6 @@ namespace MISA.CukCuk.Api.Controllers
                 return StatusCode(500, msg);
             }
         }
-
+        #endregion
     }
 }

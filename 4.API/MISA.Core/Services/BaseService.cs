@@ -27,6 +27,12 @@ namespace MISA.Core.Services
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Xử lý nghiệp vụ việc thêm mới 1 đối tượng vào db
+        /// </summary>
+        /// <param name="entity">Đối tượng truyền vào</param>
+        /// <returns>ServiceResult - lưu trạng thái kết quả sau khi xử lý nghiệp vụ và thao tác với db </returns>
+        /// CreateBy: LQNHAT(18/08/2021)
         public virtual ServiceResult Add(TEntity entity)
         {
             // xử lý nghiệp vụ, validate data
@@ -45,6 +51,13 @@ namespace MISA.Core.Services
             }
         }
 
+        /// <summary>
+        /// Xử lý nghiệp vụ việc sửa thông tin 1 đối tượng vào db
+        /// </summary>
+        /// <param name="entity">Đối tượng truyền vào</param>
+        /// <param name="entityId">Id của đối tượng truyền vào</param>
+        /// <returns>ServiceResult - lưu trạng thái kết quả sau khi xử lý nghiệp vụ và thao tác với db </returns>
+        /// CreateBy: LQNHAT(18/08/2021)
         public virtual ServiceResult Update(TEntity entity, Guid entityId)
         {
             // xử lý nghiệp vụ
@@ -63,6 +76,12 @@ namespace MISA.Core.Services
             }
         }
 
+        /// <summary>
+        /// Hàm xử lý nghiệp vụ, validate data
+        /// </summary>
+        /// <param name="entity">Đối tượng truyền vào</param>
+        /// <returns>IsValid: True or False</returns>
+        /// CreateBy: LQNHAT(18/08/2021)
         private bool Validate(TEntity entity)
         {
             var isValid = true;

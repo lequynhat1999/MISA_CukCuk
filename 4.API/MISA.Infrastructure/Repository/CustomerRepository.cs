@@ -22,6 +22,12 @@ namespace MISA.Infrastructure.Repository
         #endregion
 
         #region Methods
+        /// <summary>
+        /// Lấy ra khách hàng theo mã khách hàng
+        /// </summary>
+        /// <param name="customerId">Id khách hàng</param>
+        /// <param name="customerCode">Mã khách hàng</param>
+        /// <returns>Khách hàng được lọc theo điều kiện</returns>
         public Customer GetByCode(Guid? customerId, string customerCode)
         {
             // 3. lấy dữ liệu

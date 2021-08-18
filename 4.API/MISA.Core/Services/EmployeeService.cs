@@ -12,13 +12,17 @@ namespace MISA.Core.Services
 {
     public class EmployeeService : BaseService<Employee>, IEmployeeService
     {
+        #region DECLARE
         IEmployeeRepository _employeeRepository;
         ServiceResult _serviceResult;
+        #endregion
 
+        #region Constructor
         public EmployeeService(IEmployeeRepository employeeRepository) : base(employeeRepository)
         {
             _serviceResult = new ServiceResult();
             _employeeRepository = employeeRepository;
         }
+        #endregion
     }
 }

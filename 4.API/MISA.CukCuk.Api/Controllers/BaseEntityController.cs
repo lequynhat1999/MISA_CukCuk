@@ -27,9 +27,9 @@ namespace MISA.CukCuk.Api.Controllers
 
         #region Methods
         /// <summary>
-        /// Lấy ra dữ liệu của toàn bộ nhân viên trong db
+        /// Lấy ra dữ liệu của toàn bộ đối tượng trong db
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Danh sách đối tượng</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpGet]
         public IActionResult GetEntites()
@@ -63,10 +63,10 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Lấy ra dữ liệu 1 nhân viên theo Id
+        /// Lấy ra dữ liệu 1 đối tượng theo Id
         /// </summary>
-        /// <param name="entityId">Id nhân viên muốn lấy ra</param>
-        /// <returns></returns>
+        /// <param name="entityId">Id đối tượng muốn lấy ra</param>
+        /// <returns>Đối tượng lấy theo Id</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpGet("{entityId}")]
         public IActionResult GetEntitesById(Guid entityId)
@@ -100,9 +100,9 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Thêm 1 nhân viên vào db
+        /// Thêm 1 đối tượng vào db
         /// </summary>
-        /// <param name="entity">dữ liệu về nhân viên muốn thêm</param>
+        /// <param name="entity">dữ liệu về đối tượngmuốn thêm</param>
         /// <returns>Số bản ghi được thêm vào trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpPost]
@@ -133,10 +133,10 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Sửa thông tin 1 nhân viên trong db
+        /// Sửa thông tin 1 đối tượng trong db
         /// </summary>
-        /// <param name="entityId">Id của nhân viên muốn sửa</param>
-        /// <param name="entity">Dữ liệu nhân viên muốn sửa</param>
+        /// <param name="entityId">Id của đối tượng muốn sửa</param>
+        /// <param name="entity">Dữ liệu đối tượng muốn sửa</param>
         /// <returns>Số bản ghi được sửa trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpPut("{entityId}")]
@@ -167,9 +167,9 @@ namespace MISA.CukCuk.Api.Controllers
         }
 
         /// <summary>
-        /// Xóa 1 nhân viên trong db
+        /// Xóa 1 đối tượng trong db
         /// </summary>
-        /// <param name="entityId">Id của nhân viên</param>
+        /// <param name="entityId">Id của đối tượng</param>
         /// <returns>Số dòng được xóa trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
         [HttpDelete("{entityId}")]

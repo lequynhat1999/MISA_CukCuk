@@ -18,24 +18,36 @@ namespace MISA.Core.Entities
 
     }
 
+    /// <summary>
+    /// Cờ check việc trùng dữ liệu
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class CheckExist : Attribute
     {
 
     }
 
+    /// <summary>
+    /// Cờ check khóa chính
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class PrimaryKey : Attribute
     {
 
     }
 
+    /// <summary>
+    /// Cờ check định dạng email
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class CheckEmail : Attribute
     {
 
     }
 
+    /// <summary>
+    /// Cờ check việc map property
+    /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class NotMap : Attribute
     {
@@ -45,6 +57,9 @@ namespace MISA.Core.Entities
     public class Base
     {
         #region Property
+        /// <summary>
+        /// Trạng thái của object
+        /// </summary>
         [NotMap]
         public EnumEntityState EntityState { get; set; } = EnumEntityState.Add;
 

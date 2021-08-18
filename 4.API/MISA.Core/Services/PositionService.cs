@@ -11,12 +11,16 @@ namespace MISA.Core.Services
 {
     public class PositionService : BaseService<Position>, IPositionService
     {
+        #region DECLARE
         IPositionRepository _positionRepository;
         ServiceResult _serviceResult;
+        #endregion
+        #region Constructor
         public PositionService(IPositionRepository positionRepository) : base(positionRepository)
         {
             _serviceResult = new ServiceResult();
             _positionRepository = positionRepository;
         }
+        #endregion
     }
 }
