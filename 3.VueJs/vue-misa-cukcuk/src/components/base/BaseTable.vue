@@ -19,7 +19,7 @@
       <tbody>
         <tr v-for="employee in employees" :key="employee.EmployeeId">
           <td>{{ employee.EmployeeCode }}</td>
-          <td :title="employee.FullName">
+          <td :title="employee.FullName" style="width:120px">
             {{ employee.FullName }}
           </td>
           <td>{{ formatGender(employee.Gender) }}</td>

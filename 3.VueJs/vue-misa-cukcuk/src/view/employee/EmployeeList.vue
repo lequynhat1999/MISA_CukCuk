@@ -62,11 +62,11 @@
     ></Table>
 
     <Paging
-      :pageIndex = "pageIndex"
-      :pageSize = "pageSize"
+      :pageIndex="pageIndex"
+      :pageSize="pageSize"
       ref="resetPaging"
       @paging="paging"
-    > 
+    >
     </Paging>
 
     <EmployeeDetailDialog
@@ -123,7 +123,6 @@ export default {
     return {
       // số bản ghi trong 1 trang
       amount: 0,
-      // dữ liệu người dùng nhập vào trên thanh input search
       // header cho table
       headers: headers,
       // 1 object nhân viên
@@ -159,8 +158,6 @@ export default {
     };
   },
   created() {
-    //load dữ liệu lên table
-    this.reloadTableAndFilter();
     // lấy ra toàn bộ data
     this.getEmployeesByFilter(
       this.pageIndex,
@@ -188,7 +185,7 @@ export default {
         )
         .then((res) => {
           self.employees = res.data;
-          // debugger; // eslint-disable-line
+          debugger; // eslint-disable-line
         })
         .catch((error) => {
           console.log(error);
@@ -243,7 +240,7 @@ export default {
     openIconDelete() {
       if (this.keysearch == "") {
         this.isClose = true;
-        this.loadreloadTableAndFilterData();
+        this.reloadTableAndFilter();
       } else {
         this.isClose = false;
         this.getEmployeesByFilter(
@@ -255,21 +252,21 @@ export default {
         );
       }
     },
-    
+
     /**----------------------------------------------------------
      * Phân trang
      * CreateBy: LQNhat(16/08/2021)
      */
-    paging(indexPage)
-    {
+    paging(indexPage) {
       this.pageIndex = indexPage;
       this.getEmployeesByFilter(
-          this.pageIndex,
-          this.pageSize,
-          this.positionId,
-          this.departmentId,
-          this.keysearch
-        );
+        this.pageIndex,
+        this.pageSize,
+        this.positionId,
+        this.departmentId,
+        this.keysearch
+      );
+      debugger; // eslint-disable-line
     },
 
     /**-------------------------------------------------------
@@ -314,9 +311,13 @@ export default {
      */
     reloadTableAndFilter() {
       var self = this;
-      // binding data
       axios
-        .get("https://localhost:44338/api/v1/employees")
+         .get(
+          `https://localhost:44338/api/v1/employees/filter?pageIndex=${
+            (this.pageIndex - 1) * this.pageSize}
+            &pageSize=${this.pageSize}
+          `
+        )
         .then((res) => {
           self.employees = res.data;
           self.amountPage = res.data.length;
@@ -325,12 +326,14 @@ export default {
           self.keysearch = "";
           self.isClose = true;
           self.$refs.resetPaging.resetPaging();
+          self.departmentId = "";
+          self.positionId = "";
         })
         .catch((res) => {
           console.log(res);
         });
     },
-    
+
     /**----------------------------------
      * Hàm đóng form thông tin chi tiết
      * CreatBy: LQNhat(31/07/2021)
