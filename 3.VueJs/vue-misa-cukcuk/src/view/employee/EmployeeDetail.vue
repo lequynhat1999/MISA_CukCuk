@@ -195,7 +195,7 @@
                       </div>
                       <div class="box-input">
                         <ValidationProvider
-                          rules="required|digits:10"
+                          rules="required|numberphone"
                           name="Số điện thoại"
                           v-slot="{ errors }"
                         >
@@ -361,6 +361,12 @@ extend('minmax', {
   message: 'Mã nhân viên phải < 10 ký tự'
 });
 
+extend('numberphone', {
+  validate(value) {
+    return value.length >= 1 && value.length <= 11;
+  },
+  message: 'Số điện thoại phải ít hơn 11 chữ số'
+});
 // extend('existcode', {
 //   validate(value) {
 //     checkEmployeeCode();
@@ -398,8 +404,8 @@ export default {
       apiPosition: "https://localhost:44338/api/v1/positions",
       // data cho dropdown gender
       dataGender: [
-        { Text: "Nữ", Value: 0 },
         { Text: "Nam", Value: 1 },
+        { Text: "Nữ", Value: 0 },
         { Text: "Không xác định", Value: 2 },
       ],
       nameGender: "gender",

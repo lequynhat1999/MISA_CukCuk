@@ -16,11 +16,10 @@
 }
 
 .modal-content {
-  padding-top: 10px;
   background-color: #fefefe;
   margin: auto;
   border: 1px solid #888;
-  margin-top: 10px;
+  /* margin-top: 10px; */
   width: 700px;
   height: 633px;
   position: relative;

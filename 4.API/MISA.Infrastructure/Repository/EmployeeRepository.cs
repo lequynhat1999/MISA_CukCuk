@@ -21,36 +21,18 @@ namespace MISA.Infrastructure.Repository
         }
         #endregion
 
-
-
         #region Methods
         /// <summary>
-        /// Lấy ra 1 nhân viên theo mã nhân viên
+        /// Lấy toàn bộ nhân viên trong db
         /// </summary>
-        /// <param name="employeeCode">mã nhân viên</param>
-        /// <returns>1 nhân viên được tìm kiếm theo mã</returns>
-        /// CreateBy:LQNhat(10/08/2021)
-        public Employee GetByCode(string employeeCode, Guid? employeeId)
+        /// <returns>Danh sách nhân viên</returns>
+        /// CreateBy: LQNHAT(18/08/2021)
+        public override IEnumerable<Employee> Get()
         {
-            // 1. kết nối vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
-            // 3. lấy dữ liệu
-            var sqlQuery = "SELECT * FROM Employee WHERE EmployeeCode = @employeeCode AND EmployeeID <> @employeeId";
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@employeeCode", employeeCode);
-            parameters.Add("@employeeId", employeeId.ToString());
-            var employee = dbConnection.QueryFirstOrDefault<Employee>(sqlQuery, param: parameters);
-
-            // 4. trả về client
-            return employee;
+            var employees = _dbConnection.Query<Employee>("Proc_GetEmployees", commandType: CommandType.StoredProcedure);
+            return employees;
         }
+
 
         /// <summary>
         /// Lọc danh sách nhân viên theo các tiêu chí và phân trang
@@ -64,17 +46,8 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy: LQNHAT(14/08/2021)
         public IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
         {
-            // 1. kết nối vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
             // 3. lấy dữ liệu
-            var employees = dbConnection.Query<Employee>("Proc_GetEmployeesPaging",
+            var employees = _dbConnection.Query<Employee>("Proc_GetEmployeesPaging",
                 new
                 {
                     PageIndex = pageIndex,
@@ -93,19 +66,9 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy: LQNHAT(13/08/2021)
         public string NewCode()
         {
-            // 1. kết nối vào db
-            var connectionString = "Host = 47.241.69.179;" +
-                 "Database = MISACukCuk_MF949_LQNHAT;" +
-                 "User Id = dev;" +
-                 "Password = 12345678;";
-
-            // 2. tạo đối tượng kết nối db
-            IDbConnection dbConnection = new MySqlConnection(connectionString);
-
             // 3. lấy dữ liệu
-
             // lấy ra mã nhân viên trên cùng
-            var topEmployeeCode = dbConnection.QueryFirstOrDefault<string>("Proc_GetTopEmployeeCode", commandType: CommandType.StoredProcedure);
+            var topEmployeeCode = _dbConnection.QueryFirstOrDefault<string>("Proc_GetTopEmployeeCode", commandType: CommandType.StoredProcedure);
             var valueNewEmployeeCode = 0;
             if (topEmployeeCode != null)
             {

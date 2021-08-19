@@ -20,6 +20,7 @@ namespace MISA.Core.Entities
         /// </summary>
         [Required]
         [CheckExist]
+        [Name("Mã nhân viên")]
         public string EmployeeCode { get; set; }
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace MISA.Core.Entities
         /// Họ và tên
         /// </summary>
         [Required]
+        [Name("Họ và tên")]
         public string FullName { get; set; }
 
         /// <summary>
@@ -52,6 +54,7 @@ namespace MISA.Core.Entities
         /// Số điện thoại
         /// </summary>
         [Required]
+        [Name("Số điện thoại")]
         public string PhoneNumber { get; set; }
 
         /// <summary>
@@ -59,6 +62,7 @@ namespace MISA.Core.Entities
         /// </summary>
         [Required]
         [CheckEmail]
+        [Name("Email")]
         public string Email { get; set; }
 
         /// <summary>
@@ -70,6 +74,7 @@ namespace MISA.Core.Entities
         /// Số CMND/Căn cước
         /// </summary>
         [Required]
+        [Name("Số CMTND/Căn cước")]
         public string IdentityNumber { get; set; }
 
         /// <summary>

@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace MISA.Core.Entities
 {
+    /// <summary>
+    /// Kết quả khi xử lý nghiệp vụ
+    /// </summary>
     public class ServiceResult
     {
         /// <summary>

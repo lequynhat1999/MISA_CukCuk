@@ -75,7 +75,7 @@
       ref="modeForm"
       @cancelFormDetail="cancelFormDetail"
       @btnAddClick="btnAddClick"
-      @loadData="loadData"
+      @loadData="reloadTableAndFilter"
       @closeForm="closeForm"
     />
 
@@ -155,12 +155,12 @@ export default {
       departmentId: "",
       positionId: "",
       pageIndex: 1,
-      pageSize: 10,
+      pageSize: 7,
     };
   },
   created() {
     //load dữ liệu lên table
-    this.loadData();
+    this.reloadTableAndFilter();
     // lấy ra toàn bộ data
     this.getEmployeesByFilter(
       this.pageIndex,
@@ -233,7 +233,7 @@ export default {
       this.keysearch = "";
       this.isClose = true;
       // load lại table
-      this.loadData();
+      this.reloadTableAndFilter();
     },
     /**-----------------------------------------------------------
      * Hàm bắt sự kiện hiển thị nút xóa khi nhập vào input search
@@ -243,7 +243,7 @@ export default {
     openIconDelete() {
       if (this.keysearch == "") {
         this.isClose = true;
-        this.loadData();
+        this.loadreloadTableAndFilterData();
       } else {
         this.isClose = false;
         this.getEmployeesByFilter(
@@ -330,24 +330,7 @@ export default {
           console.log(res);
         });
     },
-    /**-----------------------------------
-     * Hàm binding data lên table
-     * CreateBy: LQNhat(31/07/2021)
-     */
-    loadData() {
-      var self = this;
-      // binding data
-      axios
-        .get("https://localhost:44338/api/v1/employees")
-        .then((res) => {
-          self.employees = res.data;
-          self.amount = res.data.length;
-          console.log(res.data);
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
+    
     /**----------------------------------
      * Hàm đóng form thông tin chi tiết
      * CreatBy: LQNhat(31/07/2021)
@@ -373,7 +356,7 @@ export default {
         .then((res) => {
           console.log(res);
           self.isHiddenDelete = !self.isHiddenDelete;
-          self.loadData();
+          self.reloadTableAndFilter();
           self.$toast.success("Xóa nhân viên thành công", {
             timeout: 2000,
           });

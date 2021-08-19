@@ -142,6 +142,15 @@ namespace MISA.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Dữ liệu nhập vào không hợp lệ.
+        /// </summary>
+        public static string Error_Validate {
+            get {
+                return ResourceManager.GetString("Error_Validate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Có lỗi xảy ra, vui lòng liên hệ cho MISA.
         /// </summary>
         public static string Exception_ErrorMsg {

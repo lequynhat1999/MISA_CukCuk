@@ -14,7 +14,7 @@ namespace MISA.Core.Entities
         /// Khóa chính
         /// </summary>
         [PrimaryKey]
-        [DisplayName("ID khách hàng")]
+        [Name("ID khách hàng")]
         public Guid CustomerId { get; set; }
 
         /// <summary>
@@ -22,7 +22,7 @@ namespace MISA.Core.Entities
         /// </summary>
         [CheckExist]
         [Required]
-        [DisplayName("Mã khách hàng")]
+        [Name("Mã khách hàng")]
         public string CustomerCode { get; set; }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace MISA.Core.Entities
         /// Họ và tên
         /// </summary>
         [Required]
-        [DisplayName("Họ và tên")]
+        [Name("Họ và tên")]
         public string FullName { get; set; }
 
         /// <summary>
@@ -61,14 +61,14 @@ namespace MISA.Core.Entities
         /// Email
         /// </summary>
         [CheckEmail]
-        [DisplayName("Email")]
+        [Name("Email")]
         public string Email { get; set; }
 
         /// <summary>
         /// Số điện thoại
         /// </summary>
         [Required]
-        [DisplayName("Số điện thoại")]
+        [Name("Số điện thoại")]
         public string PhoneNumber { get; set; }
 
         #endregion

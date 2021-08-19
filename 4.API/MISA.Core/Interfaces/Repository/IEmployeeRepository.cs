@@ -28,12 +28,5 @@ namespace MISA.Core.Interfaces.Repository
         /// CreateBy: LQNHAT(14/08/2021)
         IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch);
 
-        /// <summary>
-        /// Lấy ra 1 nhân viên theo mã nhân viên
-        /// </summary>
-        /// <param name="employeeCode">mã nhân viên</param>
-        /// <returns>1 nhân viên được tìm kiếm theo mã</returns>
-        /// CreateBy:LQNhat(10/08/2021)
-        Employee GetByCode(string employeeCode, Guid? employeeId);
     }
 }

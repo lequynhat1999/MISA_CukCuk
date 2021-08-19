@@ -3,7 +3,6 @@ using MISA.Core.Interfaces.Repository;
 using MISA.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -84,8 +83,12 @@ namespace MISA.Core.Services
         /// CreateBy: LQNHAT(18/08/2021)
         private bool Validate(TEntity entity)
         {
+            // trạng thái sau khi validate
             var isValid = true;
+
+            // mảng các câu thông báo lỗi
             var messageArr = new List<string>();
+
             // đọc các property
             var properties = entity.GetType().GetProperties();
 
@@ -93,7 +96,15 @@ namespace MISA.Core.Services
             {
                 var propName = prop.Name;
                 var propValue = prop.GetValue(entity);
-                var displayName = prop.GetCustomAttributes(typeof(DisplayNameAttribute), true);
+
+                // lấy ra name của property
+                var attrNames = prop.GetCustomAttributes(typeof(Name), true);
+                var fieldName = string.Empty;
+                if (attrNames.Length > 0)
+                {
+                    fieldName = (attrNames[0] as Name).FieldName;
+                }
+
                 // kiểm tra xem có attr cần phải validate k
                 if (prop.IsDefined(typeof(Required), false))
                 {
@@ -101,11 +112,12 @@ namespace MISA.Core.Services
                     if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
                     {
                         isValid = false;
-                        messageArr.Add($"Thông tin {propName} không được phép để trống");
+                        messageArr.Add($"Thông tin {fieldName} không được phép để trống");
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = "Dữ liệu nhập vào không hợp lệ";
+                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
                     }
                 }
+
                 if (prop.IsDefined(typeof(CheckExist), false))
                 {
                     // Check trùng dữ liệu
@@ -113,11 +125,12 @@ namespace MISA.Core.Services
                     if (entityCheckExist != null)
                     {
                         isValid = false;
-                        messageArr.Add($"Thông tin {propName} đã tồn tại");
+                        messageArr.Add($"Thông tin {fieldName} đã tồn tại");
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = "Dữ liệu nhập vào không hợp lệ";
+                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
                     }
                 }
+
                 if (prop.IsDefined(typeof(CheckEmail), false))
                 {
                     // Check định dạng email
@@ -126,9 +139,9 @@ namespace MISA.Core.Services
                     if (isMatch == false)
                     {
                         isValid = false;
-                        messageArr.Add($"Thông tin {propName} sai định dạng");
+                        messageArr.Add($"Thông tin {fieldName} sai định dạng");
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = "Dữ liệu nhập vào không hợp lệ";
+                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
                     }
                 }
             }

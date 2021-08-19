@@ -53,6 +53,19 @@ namespace MISA.Core.Entities
     {
 
     }
+
+    /// <summary>
+    /// Name của property
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class Name : Attribute
+    {
+        public string FieldName = string.Empty;
+        public Name(string fieldName)
+        {
+            FieldName = fieldName;
+        }
+    }
     #endregion
     public class Base
     {

@@ -13,11 +13,11 @@ using System.Threading.Tasks;
 
 namespace MISA.Infrastructure.Repository
 {
-    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : Base
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity>, IDisposable where TEntity : Base
     {
         #region DECLARE
         IConfiguration _configuration;
-        string _connectionString = string.Empty;
+        readonly string _connectionString = string.Empty;
         protected IDbConnection _dbConnection = null;
         string _tableName;
         #endregion
@@ -41,6 +41,8 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy:LQNhat(09/08/2021)
         public int Add(TEntity entity)
         {
+            _dbConnection.Open();
+            var transaction = _dbConnection.BeginTransaction();
             // chuỗi chứa tên cột
             var columnsName = string.Empty;
 
@@ -77,10 +79,12 @@ namespace MISA.Infrastructure.Repository
             }
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
-
             // thêm dữ liệu vào db
             var sqlQuery = $"INSERT INTO {_tableName}({columnsName}) VALUES({columnsParam}) ";
-            var result = _dbConnection.Execute(sqlQuery, param: param);
+            var result = 0;
+            result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: param);
+            transaction.Commit();
+
             return result;
         }
 
@@ -93,10 +97,13 @@ namespace MISA.Infrastructure.Repository
         public int Delete(Guid entityId)
         {
             // xóa dữ liệu
+            _dbConnection.Open();
+            var transaction = _dbConnection.BeginTransaction();
             DynamicParameters parameters = new DynamicParameters();
             parameters.Add("@entityIdParam", entityId);
             var sqlQuery = $"DELETE FROM {_tableName} WHERE {_tableName}Id = @entityIdParam";
-            var result = _dbConnection.Execute(sqlQuery, param: parameters);
+            var result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: parameters);
+            transaction.Commit();
             return result;
         }
 
@@ -105,7 +112,7 @@ namespace MISA.Infrastructure.Repository
         /// </summary>
         /// <returns>Danh sách đối tượng trong db</returns>
         /// CreateBy:LQNhat(09/08/2021)
-        public IEnumerable<TEntity> Get()
+        public virtual IEnumerable<TEntity> Get()
         {
             // lấy dữ liệu
             var sqlQuery = $"SELECT * FROM {_tableName}";
@@ -138,6 +145,8 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy:LQNhat(09/08/2021)
         public int Update(TEntity entity, Guid entityId)
         {
+            _dbConnection.Open();
+            var transaction = _dbConnection.BeginTransaction();
             var columnsName = string.Empty;
             var param = new DynamicParameters();
             var properties = entity.GetType().GetProperties();
@@ -162,10 +171,9 @@ namespace MISA.Infrastructure.Repository
             columnsName = columnsName.Remove(columnsName.Length - 1, 1);
 
             // sửa dữ liệu
-            //DynamicParameters dynamicParameters = new DynamicParameters();
-            //dynamicParameters.Add("@entityId", entityId);
             var sqlQuery = $"UPDATE {_tableName} SET {columnsName} WHERE {_tableName}Id = '{entityId}'";
-            var result = _dbConnection.Execute(sqlQuery, param: param);
+            var result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: param);
+            transaction.Commit();
             return result;
         }
 
@@ -193,6 +201,16 @@ namespace MISA.Infrastructure.Repository
             var entityGetByProperty = _dbConnection.QueryFirstOrDefault<TEntity>(sqlQuery);
             return entityGetByProperty;
         }
+
+        /// <summary>
+        /// Hàm ngắt kết nối
+        /// </summary>
+        public void Dispose()
+        {
+            _dbConnection.Close();
+            _dbConnection.Dispose();
+        }
+
         #endregion
     }
 }

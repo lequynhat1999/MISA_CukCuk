@@ -144,6 +144,9 @@
   <data name="Dev_ErrorMsg__Null_PositionCode" xml:space="preserve">
     <value>PositionCode không được phép null</value>
   </data>
+  <data name="Error_Validate" xml:space="preserve">
+    <value>Dữ liệu nhập vào không hợp lệ</value>
+  </data>
   <data name="Exception_ErrorMsg" xml:space="preserve">
     <value>Có lỗi xảy ra, vui lòng liên hệ cho MISA</value>
   </data>
