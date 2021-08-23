@@ -144,6 +144,15 @@
   <data name="Dev_ErrorMsg__Null_PositionCode" xml:space="preserve">
     <value>PositionCode không được phép null</value>
   </data>
+  <data name="Error_EmailFormat" xml:space="preserve">
+    <value>Email sai định dạng</value>
+  </data>
+  <data name="Error_Exist" xml:space="preserve">
+    <value>Thông tin {0} đã tồn tại</value>
+  </data>
+  <data name="Error_Required" xml:space="preserve">
+    <value>thông tin {0} không được để trống</value>
+  </data>
   <data name="Error_Validate" xml:space="preserve">
     <value>Dữ liệu nhập vào không hợp lệ</value>
   </data>

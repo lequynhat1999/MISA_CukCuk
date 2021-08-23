@@ -8,6 +8,19 @@
           <div class="text-add">Thêm nhân viên</div>
         </button>
       </div>
+      <div class="delete-employees">
+        <button
+          class="m-btn m-btn-defalut m-btn-delete"
+          @click="btnDeleteEmployee"
+          :disabled = isDisabled
+          :class="{'btn-disaabled': isDisabled}"
+        >
+          <div class="m-btn-icon icon-delete">
+            <i class="far fa-trash-alt"></i>
+          </div>
+          <div class="text-add">Xóa nhân viên</div>
+        </button>
+      </div>
     </div>
     <div class="filter-bar row">
       <div class="filter-left col-11">
@@ -58,12 +71,14 @@
       :isHidden="isHidden"
       :mode="modeFormDetail"
       @rowClick="rowClick"
-      @deleteRow="deleteRow"
+      @changeDisabled="changeDisabled"
     ></Table>
 
     <Paging
       :pageIndex="pageIndex"
       :pageSize="pageSize"
+      :amountPage="amountPage"
+      :numPages="numPages"
       ref="resetPaging"
       @paging="paging"
     >
@@ -75,21 +90,26 @@
       ref="modeForm"
       @cancelFormDetail="cancelFormDetail"
       @btnAddClick="btnAddClick"
-      @loadData="reloadTableAndFilter"
+      @reloadTableAndFilter="reloadTableAndFilter"
       @closeForm="closeForm"
     />
 
     <Popup
       :isHiddenDelete="isHiddenDelete"
       :employee="employee"
+      :arrEmployeeCode="arrEmployeeCode"
+      :titlePopupDelete="titlePopupDelete"
+      :textPopupDelete="textPopupDelete"
+      :iconPopupDelete="iconPopupDelete"
       @cancelDelete="cancelDelete"
-      @confirmDelete="confirmDelete"
+      @confirmDeleteEmployees="confirmDeleteEmployees"
     />
   </div>
 </template>
 
 <script>
 let headers = [
+  { text: "", align: "center" },
   { text: "Mã nhân viên", align: "left" },
   { text: "Họ và tên", align: "left" },
   { text: "Giới tính", align: "left" },
@@ -100,7 +120,7 @@ let headers = [
   { text: "Phòng ban", align: "left" },
   { text: "Mức lương cơ bản", align: "right" },
   { text: "Tình trạng công việc", align: "left" },
-  { text: "Thao tác", align: "left" },
+  // { text: "Thao tác", align: "left" },
 ];
 import axios from "axios";
 import EmployeeDetailDialog from "../employee/EmployeeDetail.vue";
@@ -121,8 +141,10 @@ export default {
   },
   data() {
     return {
+      // số trang
+      numPages: 0,
       // số bản ghi trong 1 trang
-      amount: 0,
+      amountPage: 0,
       // header cho table
       headers: headers,
       // 1 object nhân viên
@@ -154,7 +176,15 @@ export default {
       departmentId: "",
       positionId: "",
       pageIndex: 1,
-      pageSize: 7,
+      pageSize: 5,
+      // arr Id for delete
+      arrEmployeeId: [],
+      arrEmployeeCode: [],
+      isDisabled: true,
+      // prop cho popup
+      titlePopupDelete: "",
+      textPopupDelete: "",
+      iconPopupDelete: "",
     };
   },
   created() {
@@ -168,6 +198,7 @@ export default {
     );
   },
   methods: {
+    
     /*-----------------------------------------------------------------
      *Lấy ra danh sách nhân viên theo các tiêu chí và phân trang
      *CreateBy: LQNhat(14/08/2021)
@@ -176,20 +207,38 @@ export default {
       var self = this;
       axios
         .get(
-          `https://localhost:44338/api/v1/employees/filter?pageIndex=${
-            (this.pageIndex - 1) * this.pageSize
-          }
-        &pageSize=${this.pageSize}&positionId=${this.positionId}&departmentId=${
-            this.departmentId
-          }&keysearch=${this.keysearch}`
+          `https://localhost:44338/api/v1/employees/filter?pageIndex=${this.pageIndex}
+        &pageSize=${this.pageSize}&positionId=${this.positionId}&departmentId=${this.departmentId}&keysearch=${this.keysearch}`
         )
         .then((res) => {
-          self.employees = res.data;
-          debugger; // eslint-disable-line
+          self.employees = res.data.Data;
+          self.amountPage = res.data.TotalRecord;
+          self.numPages = res.data.TotalPage;
+          self.employees.forEach((item) => {
+            item.Checked = false;
+            item.InputChecked = false;
+          });
+          // debugger; // eslint-disable-line
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+
+    /**----------------------------------------------------------
+     * Phân trang
+     * CreateBy: LQNhat(16/08/2021)
+     */
+    paging(indexPage) {
+      this.pageIndex = indexPage;
+      this.getEmployeesByFilter(
+        this.pageIndex,
+        this.pageSize,
+        this.positionId,
+        this.departmentId,
+        this.keysearch
+      );
+      // debugger; // eslint-disable-line
     },
 
     /**---------------------------------------------------
@@ -198,6 +247,8 @@ export default {
      */
     getValPosition(position) {
       this.positionId = position;
+      this.$refs.resetPaging.resetPaging();
+      this.pageIndex = 1;
       this.getEmployeesByFilter(
         this.pageIndex,
         this.pageSize,
@@ -213,6 +264,8 @@ export default {
      */
     getValDepartment(department) {
       this.departmentId = department;
+      this.$refs.resetPaging.resetPaging();
+      this.pageIndex = 1;
       this.getEmployeesByFilter(
         this.pageIndex,
         this.pageSize,
@@ -243,6 +296,8 @@ export default {
         this.reloadTableAndFilter();
       } else {
         this.isClose = false;
+        this.$refs.resetPaging.resetPaging();
+        this.pageIndex = 1;
         this.getEmployeesByFilter(
           this.pageIndex,
           this.pageSize,
@@ -251,22 +306,6 @@ export default {
           this.keysearch
         );
       }
-    },
-
-    /**----------------------------------------------------------
-     * Phân trang
-     * CreateBy: LQNhat(16/08/2021)
-     */
-    paging(indexPage) {
-      this.pageIndex = indexPage;
-      this.getEmployeesByFilter(
-        this.pageIndex,
-        this.pageSize,
-        this.positionId,
-        this.departmentId,
-        this.keysearch
-      );
-      debugger; // eslint-disable-line
     },
 
     /**-------------------------------------------------------
@@ -296,43 +335,6 @@ export default {
       this.modeFormDetail = 1;
       this.$refs.modeForm.show(this.modeFormDetail, employeeId);
     },
-    /**----------------------------------------------------
-     * Hàm bắt sự kiện click vào icon xóa trong dòng
-     * CreateBy:LQNhat(31/07/2021)
-     */
-    deleteRow(employee) {
-      this.isHiddenDelete = !this.isHiddenDelete;
-      this.employee = employee;
-      this.employeeId = employee.EmployeeId;
-    },
-    /**---------------------------------------------------------------
-     * Hàm reload table và các control filter
-     * CreateBy: LQNhat(14/08/2021)
-     */
-    reloadTableAndFilter() {
-      var self = this;
-      axios
-         .get(
-          `https://localhost:44338/api/v1/employees/filter?pageIndex=${
-            (this.pageIndex - 1) * this.pageSize}
-            &pageSize=${this.pageSize}
-          `
-        )
-        .then((res) => {
-          self.employees = res.data;
-          self.amountPage = res.data.length;
-          self.$refs.textDropdownPostion.setTextDefault();
-          self.$refs.textDropdownDepartment.setTextDefault();
-          self.keysearch = "";
-          self.isClose = true;
-          self.$refs.resetPaging.resetPaging();
-          self.departmentId = "";
-          self.positionId = "";
-        })
-        .catch((res) => {
-          console.log(res);
-        });
-    },
 
     /**----------------------------------
      * Hàm đóng form thông tin chi tiết
@@ -341,28 +343,129 @@ export default {
     closeForm() {
       this.isHidden = true;
     },
-    /**-----------------------------------------------------------
+
+  /**-----------------------------------------------------------
      * Hàm bắt sự kiện đóng form popup khi click vào nút cancel
      * CreatBy: LQNhat(31/07/2021)
      */
     cancelDelete() {
       this.isHiddenDelete = !this.isHiddenDelete;
+      this.clearArr();
     },
-    /**----------------------------------------------------------
-     * Hàm băt sự kiện xóa bản ghi khi click vào nút confirm
-     * CreatBy: LQNhat(31/07/2021)
+
+    /**-----------------------------------------------
+     * Bắt sự kiện nút xóa nhiều nhân viên
+     * CreateBy:LQNHAT(22/08/2021)
      */
-    confirmDelete() {
-      var self = this;
-      axios
-        .delete(`https://localhost:44338/api/v1/employees/${this.employeeId}`)
-        .then((res) => {
-          console.log(res);
-          self.isHiddenDelete = !self.isHiddenDelete;
-          self.reloadTableAndFilter();
-          self.$toast.success("Xóa nhân viên thành công", {
-            timeout: 2000,
+    btnDeleteEmployee() {
+       this.employees.forEach((employee) => {
+        if (employee.Checked == true) {
+          // push employeeId checked vào arrEmployeeId,
+          this.arrEmployeeId.push(employee.EmployeeId);
+          // push employeeCode checked vào arrEmployeeCode
+          this.arrEmployeeCode.push(employee.EmployeeCode);
+        } else {
+          // nếu trùng thì xóa đi
+          this.arrEmployeeId = this.arrEmployeeId.filter(
+            (item) => item != employee.EmployeeId
+          );
+          this.arrEmployeeCode = this.arrEmployeeCode.filter(
+            (item) => item != employee.EmployeeCode
+          );
+        }
+      });
+      this.isHiddenDelete = !this.isHiddenDelete;
+      this.titlePopupDelete = "Xóa nhân viên";
+      this.textPopupDelete = "Bạn có chắc chắn muốn xóa nhân viên";
+      this.iconPopupDelete = `<i class="fas fa-exclamation-triangle"></i>`;
+      debugger// eslint-disable-line
+    },
+
+    /**------------------------------------------------------------------------
+     * Bắt sự kiện click xác nhận xóa nhiều nhân viên
+     * CreateBy: LQNHAT(23/08/2021)
+     */
+    confirmDeleteEmployees() {
+      // xóa theo mảng Id
+      this.arrEmployeeId.forEach((item) => {
+        var self = this;
+        axios
+          .delete(`https://localhost:44338/api/v1/employees/${item}`)
+          .then((res) => {
+            console.log(res);
+            self.reloadTableAndFilter();
           });
+      });
+      this.reloadTableAndFilter();
+      this.$toast.success("Xóa nhân viên thành công", {
+        timeout: 2000,
+      });
+      this.isHiddenDelete = true;
+      this.clearArr();
+    },
+
+    /**----------------------------------------------------
+     * Sau khi thao tác với popup thì clear arr đi
+     * CreateBy:LQNHAT(23/08/2021)
+     */
+    clearArr() {
+      this.employees.forEach((employee) => {
+        // nếu trùng thì xóa đi
+        this.arrEmployeeId = this.arrEmployeeId.filter(
+          (item) => item != employee.EmployeeId
+        );
+        this.arrEmployeeCode = this.arrEmployeeCode.filter(
+          (item) => item != employee.EmployeeCode
+        );
+      });
+    },
+
+    /**--------------------------------------------------------------
+     * Bắt sự kiện click vào ô input thì push id checked vào mảng
+     * CreateBy:LQNHAT(23/08/2021)
+     */
+    changeDisabled()
+    {
+      this.isDisabled = !this.isDisabled;
+      // this.employees.forEach((employee) => {
+      //   if (employee.InputChecked == true) {
+      //     this.isDisabled = false;
+      //   } else {
+      //     this.isDisabled = true;
+      //   }
+      // });
+    },
+
+    
+
+    /**---------------------------------------------------------------
+     * Hàm reload table và các control filter
+     * CreateBy: LQNhat(14/08/2021)
+     */
+    reloadTableAndFilter() {
+      var self = this;
+      self.$refs.resetPaging.resetPaging();
+      self.pageIndex = 1;
+      axios
+        .get(
+          `https://localhost:44338/api/v1/employees/filter?pageIndex=${this.pageIndex}
+            &pageSize=${this.pageSize}
+          `
+        )
+        .then((res) => {
+          self.employees = res.data.Data;
+          self.amountPage = res.data.TotalRecord;
+          self.numPages = res.data.TotalPage;
+          self.$refs.textDropdownPostion.setTextDefault();
+          self.$refs.textDropdownDepartment.setTextDefault();
+          self.keysearch = "";
+          self.isClose = true;
+          self.$refs.resetPaging.pagingByNumPages();
+          self.departmentId = "";
+          self.positionId = "";
+        })
+        .catch((res) => {
+          console.log(res);
         });
     },
   },

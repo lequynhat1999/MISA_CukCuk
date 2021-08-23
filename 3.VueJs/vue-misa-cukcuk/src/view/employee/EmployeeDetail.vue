@@ -101,6 +101,7 @@
                       <div class="box-dropdown">
                         <Dropdown
                           @get="getValGender"
+                          ref="genderDropdown"
                           :value="employee.Gender"
                           :data="dataGender"
                           :style="{ 'margin-left': '0px' }"
@@ -227,6 +228,7 @@
                       <div class="box-dropdown">
                         <Dropdown
                           @get="getValPosition"
+                          ref="positionDropdown"
                           :value="employee.PositionId"
                           :url="apiPosition"
                           :fields="fieldsPosition"
@@ -243,6 +245,7 @@
                       <div class="box-dropdown">
                         <Dropdown
                           @get="getValDepartment"
+                          ref="departmentDropdown"
                           :value="employee.DepartmentId"
                           :url="apiDepartment"
                           :fields="fieldsDepartment"
@@ -302,6 +305,7 @@
                       <div class="box-dropdown">
                         <Dropdown
                           @get="getValWorkStatus"
+                          ref="workStatusDropdown"
                           :value="employee.WorkStatus"
                           :data="dataWorkStatus"
                           :style="{ 'margin-left': '0px' }"
@@ -353,19 +357,19 @@ import { Money } from "v-money";
 import Dropdown from "../../components/base/BaseDropdown.vue";
 import { extend } from "vee-validate";
 
-extend('minmax', {
+extend("minmax", {
   validate(value) {
     // to do
     return value.length >= 1 && value.length <= 10;
   },
-  message: 'Mã nhân viên phải < 10 ký tự'
+  message: "Mã nhân viên phải < 10 ký tự",
 });
 
-extend('numberphone', {
+extend("numberphone", {
   validate(value) {
     return value.length >= 1 && value.length <= 11;
   },
-  message: 'Số điện thoại phải ít hơn 11 chữ số'
+  message: "Số điện thoại phải ít hơn 11 chữ số",
 });
 // extend('existcode', {
 //   validate(value) {
@@ -432,6 +436,7 @@ export default {
       required: true,
     },
   },
+  created() {},
   methods: {
     /**-----------------------------------------------
      * Hàm check mode
@@ -461,7 +466,10 @@ export default {
         .then((res) => {
           self.employees = res.data;
           self.employees.forEach((item) => {
-            if (self.employee.EmployeeCode == item.EmployeeCode && self.employee.EmployeeId != item.EmployeeId) {
+            if (
+              self.employee.EmployeeCode == item.EmployeeCode &&
+              self.employee.EmployeeId != item.EmployeeId
+            ) {
               alert("Trùng mã nhân viên");
             }
           });
@@ -522,7 +530,6 @@ export default {
           newEmployee.EmployeeCode = res.data;
           self.employee = newEmployee;
           self.$refs.txtEmployeeCode.focus();
-          
         })
         .catch((err) => {
           console.log(err);
@@ -554,23 +561,42 @@ export default {
      * CreateBy: LQNhat(31/07/2021)
      */
     addEmployee() {
+      this.checkEmployeeCode();
+      // check value undefined
+      if (typeof this.employee.Gender === "undefined") {
+        this.$refs.genderDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.DepartmentId === "undefined") {
+        this.$refs.departmentDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.PositionId === "undefined") {
+        this.$refs.positionDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.WorkStatus === "undefined") {
+        this.$refs.workStatusDropdown.setValueDropdownDefault();
+      }
+      this.apiAddEmployee();
+    },
+
+    apiAddEmployee() {
       var self = this;
-      self.checkEmployeeCode();
       axios
         .post(`https://localhost:44338/api/v1/employees`, self.employee)
         .then((res) => {
-          self.$emit("loadData");
+          self.$emit("reloadTableAndFilter");
           self.$emit("closeForm");
           this.$toast.success("Thêm nhân viên thành công", {
             timeout: 2000,
           });
           self.employee = {};
           console.log(res);
+          debugger; // eslint-disable-line
         })
         .catch((res) => {
           console.log(res);
         });
     },
+
     /**---------------------------------------
      * Hàm sửa thông tin từ form chi tiết
      * CreateBy: LQNhat(31/07/2021)
@@ -584,7 +610,7 @@ export default {
           self.employee
         )
         .then((res) => {
-          self.$emit("loadData");
+          self.$emit("reloadTableAndFilter");
           self.$emit("closeForm");
           this.$toast.success("Sửa thông tin nhân viên thành công", {
             timeout: 2000,

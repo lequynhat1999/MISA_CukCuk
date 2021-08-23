@@ -49,6 +49,8 @@ namespace MISA.Core.Interfaces.Repository
         /// CreateBy:LQNhat(09/08/2021)
         int Delete(Guid entityId);
 
+        bool DeleteEntites(List<Guid> entitesId);
+
         /// <summary>
         /// Lấy ra đối tượng theo Property
         /// </summary>

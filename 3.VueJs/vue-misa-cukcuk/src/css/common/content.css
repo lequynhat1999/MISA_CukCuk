@@ -31,6 +31,14 @@
     padding-bottom: 16px;
 }
 
+.content .content-title .delete-employees
+{
+    position: absolute;
+    right: 176px;
+    padding-top: 8px;
+    padding-left: 16px;
+    padding-bottom: 16px;
+}
 
 
 .icon-add

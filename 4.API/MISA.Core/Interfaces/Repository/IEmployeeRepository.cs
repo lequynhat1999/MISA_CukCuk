@@ -26,7 +26,9 @@ namespace MISA.Core.Interfaces.Repository
         /// <param name="keysearch">Mã nhân viên, Họ và tên, SĐT cần tìm kiếm</param>
         /// <returns>Danh sách các bản ghi theo điều kiện lọc</returns>
         /// CreateBy: LQNHAT(14/08/2021)
-        IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch);
+        //IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch);
+        object GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch);
+
 
     }
 }

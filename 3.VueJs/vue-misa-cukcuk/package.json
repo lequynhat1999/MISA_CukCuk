@@ -15,6 +15,7 @@
     "vue-axios": "^3.2.4",
     "vue-money-mask": "^0.8.1",
     "vue-toastification": "^1.7.11",
+    "vuejs-paginate": "^2.1.0",
     "vuelidate": "^0.7.6"
   },
   "devDependencies": {

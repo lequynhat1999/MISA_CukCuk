@@ -164,7 +164,7 @@ export default {
     },
 
     /**------------------------------------------------------
-     * Hàm bắt sự kiện nút reload
+     * Hàm bắt sự kiện nút reload 
      * khi reload sẽ đưa text dropdown về mặc định
      * CreateBy: LQNhat(14/08/2021)
      */
@@ -173,6 +173,18 @@ export default {
       this.selectedText = this.items[0].Text;
       this.selectedValue = this.items[0].Value;
       this.currentIndex = 0;
+    },
+
+    /**------------------------------------------------------
+     * Hàm set value mặc định cho các dropdown
+     * CreateBy: LQNhat(20/08/2021)
+     */
+    setValueDropdownDefault()
+    {
+      this.selectedText = this.items[0].Text;
+      this.selectedValue = this.items[0].Value;
+      this.currentIndex = 0;
+      this.$emit("get", this.selectedValue);
     }
   },
 

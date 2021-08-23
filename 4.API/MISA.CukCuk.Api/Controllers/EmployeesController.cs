@@ -73,19 +73,38 @@ namespace MISA.CukCuk.Api.Controllers
             try
             {
                 // 4. trả về cho client
-                var employees = _employeeRepository.GetByPaging(pageIndex, pageSize, positionId, departmentId, keysearch);
-                if (employees.Count() > 0)
+                var employeesFilter = _employeeRepository.GetByPaging(pageIndex, pageSize, positionId, departmentId, keysearch);
+                //if (employeesFilter.Count() > 0)
+                //{
+                //    return StatusCode(200, employeesFilter);
+                //}
+                //else
+                //{
+                //    var msg = new
+                //    {
+                //        userMsg = Properties.ResourceVnEmployee.User_ErrorMsg_NoContent,
+                //    };
+                //    return StatusCode(204, msg);
+                //}
+                return StatusCode(200, employeesFilter);
+            }
+            catch (Exception ex)
+            {
+                var msg = new
                 {
-                    return StatusCode(200, employees);
-                }
-                else
-                {
-                    var msg = new
-                    {
-                        userMsg = Properties.ResourceVnEmployee.User_ErrorMsg_NoContent,
-                    };
-                    return StatusCode(204, msg);
-                }
+                    devMsg = ex.Message,
+                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
+                };
+                return StatusCode(500, msg);
+            }
+        }
+
+        [HttpPost("Import")]
+        public IActionResult Import(IFormFile formFile)
+        {
+            try
+            {
+                return Ok();
             }
             catch (Exception ex)
             {

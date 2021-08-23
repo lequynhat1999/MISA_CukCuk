@@ -179,14 +179,7 @@ namespace MISA.CukCuk.Api.Controllers
             {
                 // 4. trả kết quả về client
                 var result = _baseRepository.Delete(entityId);
-                if (result > 0)
-                {
-                    return StatusCode(200, result);
-                }
-                else
-                {
-                    return StatusCode(204);
-                }
+                return StatusCode(200, result);
             }
             catch (Exception ex)
             {
@@ -197,7 +190,33 @@ namespace MISA.CukCuk.Api.Controllers
                 };
                 return StatusCode(500, msg);
             }
+        }
 
+        [HttpDelete]
+        public IActionResult DeleteEntites(string entitesId)
+        {
+            try
+            {
+                var serviceResult = _baseService.DeleteEntites(entitesId);
+                if (serviceResult.MISACode == Core.MISAEnum.EnumServiceResult.Success)
+                {
+                    return StatusCode(200, serviceResult);
+                }
+                else
+                {
+                    return BadRequest(serviceResult.Message);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var msg = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
+                };
+                return StatusCode(500, msg);
+            }
         }
 
         #endregion

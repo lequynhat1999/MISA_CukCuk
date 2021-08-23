@@ -142,6 +142,33 @@ namespace MISA.Core.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email sai định dạng.
+        /// </summary>
+        public static string Error_EmailFormat {
+            get {
+                return ResourceManager.GetString("Error_EmailFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Thông tin {0} đã tồn tại.
+        /// </summary>
+        public static string Error_Exist {
+            get {
+                return ResourceManager.GetString("Error_Exist", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to thông tin {0} không được để trống.
+        /// </summary>
+        public static string Error_Required {
+            get {
+                return ResourceManager.GetString("Error_Required", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Dữ liệu nhập vào không hợp lệ.
         /// </summary>
         public static string Error_Validate {

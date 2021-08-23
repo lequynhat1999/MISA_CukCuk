@@ -29,8 +29,15 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy: LQNHAT(18/08/2021)
         public override IEnumerable<Employee> Get()
         {
-            var employees = _dbConnection.Query<Employee>("Proc_GetEmployees", commandType: CommandType.StoredProcedure);
-            return employees;
+            try
+            {
+                var employees = _dbConnection.Query<Employee>("Proc_GetEmployees", commandType: CommandType.StoredProcedure);
+                return employees;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
 
@@ -44,19 +51,44 @@ namespace MISA.Infrastructure.Repository
         /// <param name="keysearch">Mã nhân viên, Họ và tên, SĐT cần tìm kiếm</param>
         /// <returns>Danh sách các bản ghi theo điều kiện lọc</returns>
         /// CreateBy: LQNHAT(14/08/2021)
-        public IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
+        //public IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
+        //{
+        //    // 3. lấy dữ liệu
+        //    var employees = _dbConnection.Query<Employee>("Proc_GetEmployeesPaging",
+        //        new
+        //        {
+        //            PageIndex = pageIndex,
+        //            PageSize = pageSize,
+        //            PositionId = positionId,
+        //            DepartmentId = departmentId,
+        //            Keysearch = keysearch
+        //        }, commandType: CommandType.StoredProcedure);
+        //    return employees;
+        //}
+
+        public object GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
         {
-            // 3. lấy dữ liệu
-            var employees = _dbConnection.Query<Employee>("Proc_GetEmployeesPaging",
-                new
-                {
-                    PageIndex = pageIndex,
-                    PageSize = pageSize,
-                    PositionId = positionId,
-                    DepartmentId = departmentId,
-                    Keysearch = keysearch
-                }, commandType: CommandType.StoredProcedure);
-            return employees;
+            keysearch = keysearch == null ? string.Empty : keysearch;
+            var param = new DynamicParameters();
+            param.Add("@keysearch", keysearch);
+            param.Add("@positionId", positionId);
+            param.Add("@departmentId", departmentId);
+            param.Add("@pageIndex", pageIndex);
+            param.Add("@pageSize", pageSize);
+            param.Add("@totalRecord", dbType: DbType.Int32, direction: ParameterDirection.Output);
+            param.Add("@totalPage", dbType: DbType.Int32, direction: ParameterDirection.Output);
+
+            var employees = _dbConnection.Query<Employee>("Proc_GetEmployeesByPaging", param: param, commandType: CommandType.StoredProcedure);
+            var totalPage = param.Get<int>("@totalPage");
+            var toatalRecord = param.Get<int>("@totalRecord");
+
+            var employeesFilter = new
+            {
+                TotalPage = totalPage,
+                TotalRecord = toatalRecord,
+                Data = employees,
+            };
+            return employeesFilter;
         }
 
         /// <summary>

@@ -9,6 +9,7 @@ import SlideUpDown from 'vue-slide-up-down';
 import money from 'v-money';
 import DatePicker from 'vue2-datepicker';
 import 'vue2-datepicker/index.css';
+import Paginate from 'vuejs-paginate'
 const options = {
   // You can set your default options here
   position: 'bottom-right'
@@ -29,7 +30,7 @@ Object.keys(rules).forEach(rule => {
 // Register it globally
 Vue.component('ValidationProvider', ValidationProvider); // validate field
 Vue.component('ValidationObserver', ValidationObserver); // validate form
-
+Vue.component('paginate', Paginate);
 Vue.use(Toast, options);
 Vue.component('datepicker', DatePicker)
 Vue.config.productionTip = false

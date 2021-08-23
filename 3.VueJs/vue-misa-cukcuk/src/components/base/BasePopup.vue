@@ -3,19 +3,19 @@
     <div class="modal-content-delete">
       <span class="close-delete" @click="cancelDelete">&times;</span>
       <div class="header-delete">
-        <div class="text-header-delete">Xóa bản ghi <span>{{employee.FullName}}</span> </div>
+        <div class="text-header-delete">{{this.titlePopupDelete}}</div>
       </div>
       <div class="content-delete">
         <div class="row">
           <div class="col-1">
             <div class="icon-warning">
-              <i class="fas fa-exclamation-triangle"></i>
+              <span v-html="this.iconPopupDelete"></span>
             </div>
           </div>
           <div class="col-11">
             <div class="text-content-delete">
-              Bạn có chắc chắn muốn xóa nhân viên
-              <b><span class="employeeCodeDelete">{{employee.EmployeeCode}}</span></b> không ?
+              {{this.textPopupDelete}}
+              <b><span class="employeeCodeDelete">{{this.arrEmployeeCode}}</span></b> không ?
             </div>
           </div>
         </div>
@@ -52,6 +52,18 @@ export default {
         },
         employee:{
           type: Object
+        },
+        arrEmployeeCode:{
+          type:Array
+        },
+        titlePopupDelete:{
+          type:String
+        },
+        textPopupDelete:{
+          type:String
+        },
+        iconPopupDelete:{
+          type:String
         }
     },
     methods: {
@@ -61,7 +73,7 @@ export default {
       },
       confirmDelete()
       {
-        this.$emit("confirmDelete");
+        this.$emit("confirmDeleteEmployees");
       }
 
     },

@@ -15,6 +15,10 @@ namespace MISA.Core.Services
         #region DECLARE
         IBaseRepository<TEntity> _baseRepository;
         ServiceResult _serviceResult;
+        // mảng chứa error
+        List<string> messageArr = new List<string>();
+        // check vaidate
+        bool isValid = true;
         #endregion
 
         #region Constructor
@@ -83,12 +87,6 @@ namespace MISA.Core.Services
         /// CreateBy: LQNHAT(18/08/2021)
         private bool Validate(TEntity entity)
         {
-            // trạng thái sau khi validate
-            var isValid = true;
-
-            // mảng các câu thông báo lỗi
-            var messageArr = new List<string>();
-
             // đọc các property
             var properties = entity.GetType().GetProperties();
 
@@ -111,11 +109,12 @@ namespace MISA.Core.Services
                     // check bắt buộc nhập
                     if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
                     {
-                        isValid = false;
-                        messageArr.Add($"Thông tin {fieldName} không được phép để trống");
+                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Required, fieldName));
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
                         _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
+                        isValid = false;
                     }
+                    //isValid = IsRequired(propValue, fieldName);
                 }
 
                 if (prop.IsDefined(typeof(CheckExist), false))
@@ -125,7 +124,7 @@ namespace MISA.Core.Services
                     if (entityCheckExist != null)
                     {
                         isValid = false;
-                        messageArr.Add($"Thông tin {fieldName} đã tồn tại");
+                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Exist, fieldName));
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
                         _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
                     }
@@ -139,7 +138,7 @@ namespace MISA.Core.Services
                     if (isMatch == false)
                     {
                         isValid = false;
-                        messageArr.Add($"Thông tin {fieldName} sai định dạng");
+                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_EmailFormat, fieldName));
                         _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
                         _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
                     }
@@ -147,6 +146,57 @@ namespace MISA.Core.Services
             }
             _serviceResult.Data = messageArr;
             return isValid;
+        }
+
+        private bool IsRequired(object propValue, string fieldName)
+        {
+            if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
+            {
+                messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Required, fieldName));
+                _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        public ServiceResult DeleteEntites(string entitesId)
+        {
+
+            string[] arrId = entitesId.Split(",");
+            List<Guid> idList = new List<Guid>();
+            bool flag = true;
+            for (int i = 0; i < arrId.Length; i++)
+            {
+                Guid temp = new Guid();
+                if (Guid.TryParse(arrId[i], out temp))
+                {
+                    idList.Add(temp);
+                }
+                else
+                {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag)
+            {
+                var result = _baseRepository.DeleteEntites(idList);
+                if (!result)
+                {
+                    _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                    _serviceResult.Message = $"Id sai hoặc không tồn tại";
+                }
+            }
+            else
+            {
+                _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                _serviceResult.Message = $"Id sai hoặc không tồn tại";
+            }
+            return _serviceResult;
         }
         #endregion
     }

@@ -12,14 +12,23 @@
             :style="{ 'text-align': item.align }"
           >
             {{ item.text }}
-            <span v-html="iconSort"></span>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr v-for="employee in employees" :key="employee.EmployeeId">
+        <tr
+          v-for="employee in employees"
+          :key="employee.EmployeeId"
+          @dblclick="rowTableClick(employee.EmployeeId)"
+        >
+          <td>
+            <input
+              type="checkbox"
+              @click="clickInputCheckBox(employee)"
+            />
+          </td>
           <td>{{ employee.EmployeeCode }}</td>
-          <td :title="employee.FullName" style="width:120px">
+          <td :title="employee.FullName" style="min-width: 120px !important">
             {{ employee.FullName }}
           </td>
           <td>{{ formatGender(employee.Gender) }}</td>
@@ -31,14 +40,14 @@
           <td>
             {{ employee.PositionName }}
           </td>
-          <td>
+          <td style="max-width: 105px !important">
             {{ employee.DepartmentName }}
           </td>
           <td style="text-align: right">
             {{ formatPrice(employee.Salary) }}
           </td>
           <td>{{ formatWorkStatus(employee.WorkStatus) }}</td>
-          <td>
+          <!-- <td>
             <div class="option-icon">
               <i
                 class="fas fa-edit icon-edit"
@@ -51,10 +60,12 @@
                 title="Xóa"
               ></i>
             </div>
-          </td>
+          </td> -->
         </tr>
         <tr v-if="employees.length == 0 ? true : false">
-          <td colspan="12" style="text-align: center">Không có dữ liệu để hiển thị</td>
+          <td colspan="12" style="text-align: center">
+            Không có dữ liệu để hiển thị
+          </td>
         </tr>
       </tbody>
     </table>
@@ -67,17 +78,16 @@ export default {
   name: "BaseTable",
   data() {
     return {
-      iconSort: `<i class="fas fa-sort icon-table"></i>`,
       employeeId: "",
       test: "red",
+      inputChecked: false,
     };
   },
   props: {
     headers: {
       type: Array,
     },
-    employees: {
-    },
+    employees: {},
     isHidden: {
       type: Boolean,
       default: true,
@@ -86,8 +96,16 @@ export default {
       type: Number,
       default: 0,
     },
+    
   },
   methods: {
+    clickInputCheckBox(employee)
+    {
+      employee.Checked = ! employee.Checked;
+      employee.InputChecked = !employee.InputChecked;
+       this.$emit("changeDisabled");
+    },
+
     /**------------------------------------------------
      * Hàm bắt sự kiện click vào từng dòng trong table
      * CreateBy: LQNhat(30/07/2021)
@@ -98,12 +116,12 @@ export default {
     },
 
     /**-------------------------------------------------------
-     * Hàm bắt sự kiện chuột phải vào từng dòng trong table
+     * Hàm bắt sự kiện click vào icon delete trên từng dòng trong table
      * CreateBy:LQNhat(1/8/2021)
      */
-    rightClickRow(employee) {
-      this.$emit("deleteRow", employee);
-    },
+    // rightClickRow(employee) {
+    //   this.$emit("deleteRow", employee);
+    // },
 
     /**----------------------------------------------------------
      * Hàm format ngày tháng năm trên table

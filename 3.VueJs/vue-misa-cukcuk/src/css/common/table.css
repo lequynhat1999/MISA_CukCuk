@@ -1,5 +1,12 @@
 .table {
   height: calc(100vh - 214px);
+  width: calc(100% - 221px);
+}
+
+table
+{
+  margin-left: 16px;
+  padding-right: 16px;
 }
 
 table th,
@@ -17,11 +24,7 @@ td
 {
   max-width: 100px;
 }
-table
-{
-  margin-left: 16px;
-  padding-right: 16px;
-}
+
 
 /* table tbody tr:nth-child(odd) {
   background-color: #E9EBEE;
@@ -43,4 +46,9 @@ tbody tr:hover
 {
   background-color: #e5e5e5;
   cursor: pointer;
+}
+
+.trChecked
+{
+  background-color: red !important;
 }

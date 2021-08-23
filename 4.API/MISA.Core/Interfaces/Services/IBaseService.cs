@@ -26,5 +26,6 @@ namespace MISA.Core.Interfaces.Services
         /// CreateBy:LQNhat(09/08/2021)
         ServiceResult Update(TEntity entity, Guid entityId);
 
+        ServiceResult DeleteEntites(string entitesId);
     }
 }

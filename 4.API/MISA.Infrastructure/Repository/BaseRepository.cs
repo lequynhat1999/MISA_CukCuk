@@ -41,8 +41,6 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy:LQNhat(09/08/2021)
         public int Add(TEntity entity)
         {
-            _dbConnection.Open();
-            var transaction = _dbConnection.BeginTransaction();
             // chuỗi chứa tên cột
             var columnsName = string.Empty;
 
@@ -81,9 +79,8 @@ namespace MISA.Infrastructure.Repository
             columnsParam = columnsParam.Remove(columnsParam.Length - 1, 1);
             // thêm dữ liệu vào db
             var sqlQuery = $"INSERT INTO {_tableName}({columnsName}) VALUES({columnsParam}) ";
-            var result = 0;
-            result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: param);
-            transaction.Commit();
+            var result = _dbConnection.Execute(sqlQuery, param: param);
+            //transaction.Commit();
 
             return result;
         }
@@ -97,14 +94,21 @@ namespace MISA.Infrastructure.Repository
         public int Delete(Guid entityId)
         {
             // xóa dữ liệu
-            _dbConnection.Open();
-            var transaction = _dbConnection.BeginTransaction();
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@entityIdParam", entityId);
-            var sqlQuery = $"DELETE FROM {_tableName} WHERE {_tableName}Id = @entityIdParam";
-            var result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: parameters);
-            transaction.Commit();
-            return result;
+            var entityCurrent = GetById(entityId);
+            if (entityCurrent != null)
+            {
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@entityIdParam", entityId);
+                var sqlQuery = $"DELETE FROM {_tableName} WHERE {_tableName}Id = @entityIdParam";
+                var result = _dbConnection.Execute(sqlQuery, param: parameters);
+                //transaction.Commit();
+                return result;
+            }
+            else
+            {
+                return 0;
+            }
+
         }
 
         /// <summary>
@@ -114,10 +118,17 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy:LQNhat(09/08/2021)
         public virtual IEnumerable<TEntity> Get()
         {
-            // lấy dữ liệu
-            var sqlQuery = $"SELECT * FROM {_tableName}";
-            var entities = _dbConnection.Query<TEntity>(sqlQuery);
-            return entities;
+            try
+            {
+                // lấy dữ liệu
+                var sqlQuery = $"SELECT * FROM {_tableName}";
+                var entities = _dbConnection.Query<TEntity>(sqlQuery);
+                return entities;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
         }
 
         /// <summary>
@@ -128,12 +139,20 @@ namespace MISA.Infrastructure.Repository
         /// CreateBy:LQNhat(09/08/2021)
         public TEntity GetById(Guid entityId)
         {
-            // 3. lấy dữ liệu
-            var sqlQuery = $"SELECT * FROM {_tableName} WHERE {_tableName}Id = @entityId";
-            DynamicParameters parameters = new DynamicParameters();
-            parameters.Add("@entityId", entityId);
-            var entity = _dbConnection.QueryFirstOrDefault<TEntity>(sqlQuery, param: parameters);
-            return entity;
+            try
+            {
+                // 3. lấy dữ liệu
+                var sqlQuery = $"SELECT * FROM {_tableName} WHERE {_tableName}Id = @entityId";
+                DynamicParameters parameters = new DynamicParameters();
+                parameters.Add("@entityId", entityId);
+                var entity = _dbConnection.QueryFirstOrDefault<TEntity>(sqlQuery, param: parameters);
+                return entity;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -146,35 +165,44 @@ namespace MISA.Infrastructure.Repository
         public int Update(TEntity entity, Guid entityId)
         {
             _dbConnection.Open();
-            var transaction = _dbConnection.BeginTransaction();
-            var columnsName = string.Empty;
-            var param = new DynamicParameters();
-            var properties = entity.GetType().GetProperties();
-            foreach (var prop in properties)
+            var entityCurrent = GetById(entityId);
+            if (entityCurrent != null)
             {
-                var propertyAttrNotMap = prop.GetCustomAttributes(typeof(NotMap), true);
-                if (propertyAttrNotMap.Length == 0)
+                var transaction = _dbConnection.BeginTransaction();
+                var columnsName = string.Empty;
+                var param = new DynamicParameters();
+                var properties = entity.GetType().GetProperties();
+                foreach (var prop in properties)
                 {
-                    var propName = prop.Name;
-                    var propValue = prop.GetValue(entity);
-                    //ngày chỉnh sửa
-                    if (propName == "ModifiedDate")
+                    var propertyAttrNotMap = prop.GetCustomAttributes(typeof(NotMap), true);
+                    if (propertyAttrNotMap.Length == 0)
                     {
-                        propValue = DateTime.UtcNow;
+                        var propName = prop.Name;
+                        var propValue = prop.GetValue(entity);
+                        //ngày chỉnh sửa
+                        if (propName == "ModifiedDate")
+                        {
+                            propValue = DateTime.UtcNow;
+                        }
+                        columnsName += $"{propName} = @{propName},";
+                        param.Add($"@{propName}", propValue);
                     }
-                    columnsName += $"{propName} = @{propName},";
-                    param.Add($"@{propName}", propValue);
                 }
+
+                // cắt dấu phẩy cuối chuỗi
+                columnsName = columnsName.Remove(columnsName.Length - 1, 1);
+
+                // sửa dữ liệu
+                var sqlQuery = $"UPDATE {_tableName} SET {columnsName} WHERE {_tableName}Id = '{entityId}'";
+                var result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: param);
+                transaction.Commit();
+                return result;
+            }
+            else
+            {
+                return -1;
             }
 
-            // cắt dấu phẩy cuối chuỗi
-            columnsName = columnsName.Remove(columnsName.Length - 1, 1);
-
-            // sửa dữ liệu
-            var sqlQuery = $"UPDATE {_tableName} SET {columnsName} WHERE {_tableName}Id = '{entityId}'";
-            var result = _dbConnection.Execute(sqlQuery, transaction: transaction, param: param);
-            transaction.Commit();
-            return result;
         }
 
         /// <summary>
@@ -202,14 +230,45 @@ namespace MISA.Infrastructure.Repository
             return entityGetByProperty;
         }
 
+
+        public bool DeleteEntites(List<Guid> entitesId)
+        {
+            bool flag = true;
+            try
+            {
+                _dbConnection.Open();
+                using (var transaction = _dbConnection.BeginTransaction())
+                {
+                    foreach (var item in entitesId)
+                    {
+                        string sqlQuery = $"DELETE FROM {_tableName} WHERE {_tableName}Id = '{item}'";
+                        var result = _dbConnection.Execute(sqlQuery, transaction: transaction);
+                        if (result == 0)
+                        {
+                            flag = false;
+                            transaction.Rollback();
+                            break;
+                        }
+                        transaction.Commit();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return flag;
+        }
+
         /// <summary>
         /// Hàm ngắt kết nối
         /// </summary>
         public void Dispose()
         {
-            _dbConnection.Close();
             _dbConnection.Dispose();
         }
+
 
         #endregion
     }
