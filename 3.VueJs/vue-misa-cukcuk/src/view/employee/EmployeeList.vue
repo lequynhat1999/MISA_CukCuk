@@ -2,6 +2,7 @@
   <div class="box-content">
     <div class="content-title">
       <Title :title="title" />
+      
       <div class="add-employee">
         <button class="m-btn m-btn-defalut" id="btn-add" @click="btnAddClick">
           <div class="m-btn-icon icon-add"></div>
@@ -12,8 +13,8 @@
         <button
           class="m-btn m-btn-defalut m-btn-delete"
           @click="btnDeleteEmployee"
-          :disabled = isDisabled
-          :class="{'btn-disaabled': isDisabled}"
+          :disabled="isDisabled"
+          :class="{ 'btn-disaabled': isDisabled }"
         >
           <div class="m-btn-icon icon-delete">
             <i class="far fa-trash-alt"></i>
@@ -70,6 +71,7 @@
       :employees="employees"
       :isHidden="isHidden"
       :mode="modeFormDetail"
+      ref="resetInputChecked"
       @rowClick="rowClick"
       @changeDisabled="changeDisabled"
     ></Table>
@@ -104,6 +106,7 @@
       @cancelDelete="cancelDelete"
       @confirmDeleteEmployees="confirmDeleteEmployees"
     />
+    <Loading :isLoading="isLoading" />
   </div>
 </template>
 
@@ -129,6 +132,7 @@ import Paging from "../../components/base/BasePaging.vue";
 import Title from "../../components/base/BaseTitle.vue";
 import Popup from "../../components/base/BasePopup.vue";
 import Dropdown from "../../components/base/BaseDropdown.vue";
+import Loading from "../../components/base/BaseLoading.vue";
 export default {
   name: "EmployeeList",
   components: {
@@ -138,6 +142,7 @@ export default {
     Title,
     Popup,
     Dropdown,
+    Loading,
   },
   data() {
     return {
@@ -180,11 +185,15 @@ export default {
       // arr Id for delete
       arrEmployeeId: [],
       arrEmployeeCode: [],
+      // disable btn delete
       isDisabled: true,
       // prop cho popup
       titlePopupDelete: "",
       textPopupDelete: "",
       iconPopupDelete: "",
+      // loading
+      isLoading: false,
+      countChecked: 0,
     };
   },
   created() {
@@ -198,14 +207,14 @@ export default {
     );
   },
   methods: {
-    
     /*-----------------------------------------------------------------
      *Lấy ra danh sách nhân viên theo các tiêu chí và phân trang
      *CreateBy: LQNhat(14/08/2021)
      */
-    getEmployeesByFilter() {
+     getEmployeesByFilter() {
       var self = this;
-      axios
+      self.isLoading = true;
+       axios
         .get(
           `https://localhost:44338/api/v1/employees/filter?pageIndex=${this.pageIndex}
         &pageSize=${this.pageSize}&positionId=${this.positionId}&departmentId=${this.departmentId}&keysearch=${this.keysearch}`
@@ -216,8 +225,8 @@ export default {
           self.numPages = res.data.TotalPage;
           self.employees.forEach((item) => {
             item.Checked = false;
-            item.InputChecked = false;
           });
+          self.isLoading = false;
           // debugger; // eslint-disable-line
         })
         .catch((error) => {
@@ -344,7 +353,7 @@ export default {
       this.isHidden = true;
     },
 
-  /**-----------------------------------------------------------
+    /**-----------------------------------------------------------
      * Hàm bắt sự kiện đóng form popup khi click vào nút cancel
      * CreatBy: LQNhat(31/07/2021)
      */
@@ -358,7 +367,7 @@ export default {
      * CreateBy:LQNHAT(22/08/2021)
      */
     btnDeleteEmployee() {
-       this.employees.forEach((employee) => {
+      this.employees.forEach((employee) => {
         if (employee.Checked == true) {
           // push employeeId checked vào arrEmployeeId,
           this.arrEmployeeId.push(employee.EmployeeId);
@@ -378,7 +387,7 @@ export default {
       this.titlePopupDelete = "Xóa nhân viên";
       this.textPopupDelete = "Bạn có chắc chắn muốn xóa nhân viên";
       this.iconPopupDelete = `<i class="fas fa-exclamation-triangle"></i>`;
-      debugger// eslint-disable-line
+      debugger; // eslint-disable-line
     },
 
     /**------------------------------------------------------------------------
@@ -386,22 +395,24 @@ export default {
      * CreateBy: LQNHAT(23/08/2021)
      */
     confirmDeleteEmployees() {
-      // xóa theo mảng Id
-      this.arrEmployeeId.forEach((item) => {
-        var self = this;
-        axios
-          .delete(`https://localhost:44338/api/v1/employees/${item}`)
-          .then((res) => {
-            console.log(res);
-            self.reloadTableAndFilter();
+      var self = this;
+      axios
+        .delete(
+          `https://localhost:44338/api/v1/employees?entitesId=${this.arrEmployeeId}`
+        )
+        .then((res) => {
+          console.log(res);
+          self.reloadTableAndFilter();
+          self.$toast.success("Xóa nhân viên thành công", {
+            timeout: 2000,
           });
-      });
-      this.reloadTableAndFilter();
-      this.$toast.success("Xóa nhân viên thành công", {
-        timeout: 2000,
-      });
-      this.isHiddenDelete = true;
-      this.clearArr();
+          self.isHiddenDelete = true;
+          self.clearArr();
+          self.isDisabled = true;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
     },
 
     /**----------------------------------------------------
@@ -424,19 +435,35 @@ export default {
      * Bắt sự kiện click vào ô input thì push id checked vào mảng
      * CreateBy:LQNHAT(23/08/2021)
      */
-    changeDisabled()
-    {
+    changeDisabled() {
       this.isDisabled = !this.isDisabled;
-      // this.employees.forEach((employee) => {
-      //   if (employee.InputChecked == true) {
-      //     this.isDisabled = false;
-      //   } else {
-      //     this.isDisabled = true;
-      //   }
-      // });
+      this.employees.forEach((employee) => {
+        if (employee.Checked == false) {
+          return 1;
+        }
+      });
+
     },
 
-    
+    /**
+     * C
+     */
+    exportEmployee() {
+      var self = this;
+      axios
+        .get(`https://localhost:44338/api/v1/employees/export`)
+        .then((res) => {
+          console.log(res);
+          self.reloadTableAndFilter();
+          self.$toast.success("Xuất dữ liệu thành công", {
+            timeout: 2000,
+          });
+          self.isHiddenDelete = true;
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    },
 
     /**---------------------------------------------------------------
      * Hàm reload table và các control filter
@@ -446,6 +473,7 @@ export default {
       var self = this;
       self.$refs.resetPaging.resetPaging();
       self.pageIndex = 1;
+      self.isLoading = true;
       axios
         .get(
           `https://localhost:44338/api/v1/employees/filter?pageIndex=${this.pageIndex}
@@ -458,11 +486,12 @@ export default {
           self.numPages = res.data.TotalPage;
           self.$refs.textDropdownPostion.setTextDefault();
           self.$refs.textDropdownDepartment.setTextDefault();
+          self.$refs.resetPaging.pagingByNumPages();
           self.keysearch = "";
           self.isClose = true;
-          self.$refs.resetPaging.pagingByNumPages();
           self.departmentId = "";
           self.positionId = "";
+          self.isLoading = false;
         })
         .catch((res) => {
           console.log(res);

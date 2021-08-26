@@ -25,7 +25,7 @@
                   </div>
                 </div>
                 <div class="row">
-                  <div class="col-6">
+                  <div class="col-6" >
                     <div class="row-wrapper">
                       <div class="title-input-info">
                         Mã nhân viên (<span style="color: red">*</span>)
@@ -53,7 +53,7 @@
                     </div>
                   </div>
                   <div class="col-6">
-                    <div class="row-wrapper">
+                    <div class="row-wrapper" >
                       <div class="title-input-info">
                         Họ và tên (<span style="color: red">*</span>)
                       </div>
@@ -371,13 +371,12 @@ extend("numberphone", {
   },
   message: "Số điện thoại phải ít hơn 11 chữ số",
 });
-// extend('existcode', {
-//   validate(value) {
-//     checkEmployeeCode();
-
-//   },
-//   message: 'Mã nhân viên đã tồn tại'
-// });
+extend('existcode', {
+  validate() {
+   this.checkEmployeeCode();
+  },
+  message: 'Mã nhân viên đã tồn tại'
+});
 
 export default {
   name: "EmployeeDetail",
@@ -602,6 +601,18 @@ export default {
      * CreateBy: LQNhat(31/07/2021)
      */
     editEmployee() {
+      if (typeof this.employee.Gender === "undefined") {
+        this.$refs.genderDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.DepartmentId === "undefined") {
+        this.$refs.departmentDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.PositionId === "undefined") {
+        this.$refs.positionDropdown.setValueDropdownDefault();
+      }
+      if (typeof this.employee.WorkStatus === "undefined") {
+        this.$refs.workStatusDropdown.setValueDropdownDefault();
+      }
       var self = this;
       self.checkEmployeeCode();
       axios

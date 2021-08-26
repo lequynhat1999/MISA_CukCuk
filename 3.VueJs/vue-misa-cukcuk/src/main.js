@@ -19,7 +19,7 @@ const options = {
 import { ValidationProvider, ValidationObserver, extend } from 'vee-validate'; 
 import * as rules from 'vee-validate/dist/rules';
 import { messages } from 'vee-validate/dist/locale/vi.json';
-
+import router from './router';
 Object.keys(rules).forEach(rule => {
   extend(rule, {
     ...rules[rule], // copies rule configuration
@@ -38,5 +38,6 @@ Vue.use(VueAxios, axios,VueTheMask)
 Vue.use(money)
 Vue.component('slide-up-down', SlideUpDown)
 new Vue({
+  router,
   render: h => h(App),
 }).$mount('#app')

@@ -98,3 +98,18 @@
 {
   background-color: #ffcccc !important;
 }
+
+.btn-export
+{
+  position: absolute;
+  right: 305px;
+  top: 9px;
+}
+
+.m-btn-export
+{
+  background: url("../../assets/icon/icon-export.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 18px;
+}

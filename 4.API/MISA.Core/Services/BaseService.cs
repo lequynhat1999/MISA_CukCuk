@@ -4,6 +4,7 @@ using MISA.Core.Interfaces.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -85,7 +86,7 @@ namespace MISA.Core.Services
         /// <param name="entity">Đối tượng truyền vào</param>
         /// <returns>IsValid: True or False</returns>
         /// CreateBy: LQNHAT(18/08/2021)
-        private bool Validate(TEntity entity)
+        public bool Validate(TEntity entity)
         {
             // đọc các property
             var properties = entity.GetType().GetProperties();
@@ -104,65 +105,96 @@ namespace MISA.Core.Services
                 }
 
                 // kiểm tra xem có attr cần phải validate k
-                if (prop.IsDefined(typeof(Required), false))
-                {
-                    // check bắt buộc nhập
-                    if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
-                    {
-                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Required, fieldName));
-                        _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
-                        isValid = false;
-                    }
-                    //isValid = IsRequired(propValue, fieldName);
-                }
+                isValid = IsRequired(prop, propValue, fieldName);
 
-                if (prop.IsDefined(typeof(CheckExist), false))
-                {
-                    // Check trùng dữ liệu
-                    var entityCheckExist = _baseRepository.GetByProperty(entity, prop);
-                    if (entityCheckExist != null)
-                    {
-                        isValid = false;
-                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Exist, fieldName));
-                        _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
-                    }
-                }
+                // Kiểm tra trùng dữ liệu
+                isValid = IsExist(entity, prop, propValue, fieldName);
 
-                if (prop.IsDefined(typeof(CheckEmail), false))
-                {
-                    // Check định dạng email
-                    var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-                    var isMatch = Regex.IsMatch((string)propValue, emailFormat, RegexOptions.IgnoreCase);
-                    if (isMatch == false)
-                    {
-                        isValid = false;
-                        messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_EmailFormat, fieldName));
-                        _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                        _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
-                    }
-                }
+                // Kiểm tra định dạng email
+                isValid = IsFormatEmail(prop, propValue, fieldName);
             }
             _serviceResult.Data = messageArr;
             return isValid;
         }
 
-        private bool IsRequired(object propValue, string fieldName)
+        /// <summary>
+        /// Check required
+        /// </summary>
+        /// <param name="prop"></param>
+        /// <param name="propValue"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public bool IsRequired(PropertyInfo prop, object propValue, string fieldName)
         {
-            if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
+            if (prop.IsDefined(typeof(Required), false))
             {
-                messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Required, fieldName));
-                _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
-                return false;
+                // check bắt buộc nhập
+                if (string.IsNullOrEmpty(Convert.ToString(propValue)) || propValue == null)
+                {
+                    messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Required, fieldName));
+                    _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                    _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
+                    isValid = false;
+                }
             }
-            else
-            {
-                return true;
-            }
+            return isValid;
         }
 
+        /// <summary>
+        /// Check trùng dữ liệu
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="prop"></param>
+        /// <param name="propValue"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public bool IsExist(TEntity entity, PropertyInfo prop, object propValue, string fieldName)
+        {
+            if (prop.IsDefined(typeof(CheckExist), false))
+            {
+                // Check trùng dữ liệu
+                var entityCheckExist = _baseRepository.GetByProperty(entity, prop);
+                if (entityCheckExist != null)
+                {
+                    isValid = false;
+                    messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_Exist, fieldName));
+                    _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                    _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
+                }
+            }
+            return isValid;
+        }
+
+        /// <summary>
+        /// Check định dạng email
+        /// </summary>
+        /// <param name="prop"></param>
+        /// <param name="propValue"></param>
+        /// <param name="fieldName"></param>
+        /// <returns></returns>
+        public bool IsFormatEmail(PropertyInfo prop, object propValue, string fieldName)
+        {
+            if (prop.IsDefined(typeof(CheckEmail), false))
+            {
+                // Check định dạng email
+                var emailFormat = @"[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+                var isMatch = Regex.IsMatch((string)propValue, emailFormat, RegexOptions.IgnoreCase);
+                if (isMatch == false)
+                {
+                    isValid = false;
+                    messageArr.Add(string.Format(Resources.ResourceVnEmployee.Error_EmailFormat, fieldName));
+                    _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
+                    _serviceResult.Message = Resources.ResourceVnEmployee.Error_Validate;
+                }
+            }
+            return isValid;
+        }
+
+        /// <summary>
+        /// Xóa nhiều đối tượng
+        /// </summary>
+        /// <param name="entitesId"></param>
+        /// <returns></returns>
         public ServiceResult DeleteEntites(string entitesId)
         {
 
@@ -188,13 +220,13 @@ namespace MISA.Core.Services
                 if (!result)
                 {
                     _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                    _serviceResult.Message = $"Id sai hoặc không tồn tại";
+                    _serviceResult.Message = "Id sai hoặc không tồn tại";
                 }
             }
             else
             {
                 _serviceResult.MISACode = MISAEnum.EnumServiceResult.BadRequest;
-                _serviceResult.Message = $"Id sai hoặc không tồn tại";
+                _serviceResult.Message = "Id sai hoặc không tồn tại";
             }
             return _serviceResult;
         }

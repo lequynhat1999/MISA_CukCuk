@@ -1,5 +1,5 @@
 <template>
-  <div class="dropdown col-3 dropdown-filter" @click="toggleDropdown">
+  <div class="dropdown col-2 dropdown-filter" @click="toggleDropdown">
     <div class="dropdown-text">{{ selectedText }}</div>
     <div
       class="dropdown-icon-delete"

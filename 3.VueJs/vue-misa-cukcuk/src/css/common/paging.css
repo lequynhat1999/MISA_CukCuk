@@ -77,7 +77,7 @@
 
 .paging-active
 {
-  background-color: #01b075;
+  background-color: #01b075 !important;
   color: #fff;
 }
 

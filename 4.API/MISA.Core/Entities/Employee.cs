@@ -134,6 +134,9 @@ namespace MISA.Core.Entities
         /// </summary>
         //public string GenderName { get; set; }
 
+        [NotMap]
+        public List<string> ImportArrError { get; set; } = new List<string>();
+
         #endregion
     }
 }

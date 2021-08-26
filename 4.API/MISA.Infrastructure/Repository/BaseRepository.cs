@@ -230,7 +230,11 @@ namespace MISA.Infrastructure.Repository
             return entityGetByProperty;
         }
 
-
+        /// <summary>
+        /// Xóa nhiều đối tượng
+        /// </summary>
+        /// <param name="entitesId"></param>
+        /// <returns></returns>
         public bool DeleteEntites(List<Guid> entitesId)
         {
             bool flag = true;
@@ -249,8 +253,8 @@ namespace MISA.Infrastructure.Repository
                             transaction.Rollback();
                             break;
                         }
-                        transaction.Commit();
                     }
+                    transaction.Commit();
                 }
             }
             catch (Exception)

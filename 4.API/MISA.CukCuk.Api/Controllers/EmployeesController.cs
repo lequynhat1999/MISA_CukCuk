@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using MISA.Core.Entities;
 using MISA.Core.Interfaces.Services;
 using MISA.Core.Interfaces.Repository;
+using System.IO;
 
 namespace MISA.CukCuk.Api.Controllers
 {
@@ -104,7 +105,8 @@ namespace MISA.CukCuk.Api.Controllers
         {
             try
             {
-                return Ok();
+                var serviceResult = _employeeService.ImportEmployee(formFile);
+                return Ok(serviceResult.Data);
             }
             catch (Exception ex)
             {
@@ -116,6 +118,36 @@ namespace MISA.CukCuk.Api.Controllers
                 return StatusCode(500, msg);
             }
         }
+
+        [HttpGet("Export")]
+        public IActionResult ExportEmployee()
+        {
+            try
+            {
+                var serviceResult = _employeeService.ExportEmployee();
+                if (serviceResult.Data != null)
+                {
+                    Stream stream = (Stream)serviceResult.Data;
+                    stream.Position = 0;
+                    string excelName = $"Employees.xlsx";
+                    return File(stream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", excelName);
+                }
+                else
+                {
+                    return Ok("Thuc hien khong thanh cong");
+                }
+            }
+            catch (Exception ex)
+            {
+                var msg = new
+                {
+                    devMsg = ex.Message,
+                    userMsg = Properties.ResourceVnEmployee.Exception_ErrorMsg,
+                };
+                return StatusCode(500, msg);
+            }
+        }
+
         #endregion
     }
 }

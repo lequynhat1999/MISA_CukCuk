@@ -102,7 +102,6 @@ export default {
     clickInputCheckBox(employee)
     {
       employee.Checked = ! employee.Checked;
-      employee.InputChecked = !employee.InputChecked;
        this.$emit("changeDisabled");
     },
 

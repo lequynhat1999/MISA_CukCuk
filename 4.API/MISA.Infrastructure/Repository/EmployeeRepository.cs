@@ -40,7 +40,6 @@ namespace MISA.Infrastructure.Repository
             }
         }
 
-
         /// <summary>
         /// Lọc danh sách nhân viên theo các tiêu chí và phân trang
         /// </summary>
@@ -51,21 +50,6 @@ namespace MISA.Infrastructure.Repository
         /// <param name="keysearch">Mã nhân viên, Họ và tên, SĐT cần tìm kiếm</param>
         /// <returns>Danh sách các bản ghi theo điều kiện lọc</returns>
         /// CreateBy: LQNHAT(14/08/2021)
-        //public IEnumerable<Employee> GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
-        //{
-        //    // 3. lấy dữ liệu
-        //    var employees = _dbConnection.Query<Employee>("Proc_GetEmployeesPaging",
-        //        new
-        //        {
-        //            PageIndex = pageIndex,
-        //            PageSize = pageSize,
-        //            PositionId = positionId,
-        //            DepartmentId = departmentId,
-        //            Keysearch = keysearch
-        //        }, commandType: CommandType.StoredProcedure);
-        //    return employees;
-        //}
-
         public object GetByPaging(int pageIndex, int pageSize, string positionId, string departmentId, string keysearch)
         {
             keysearch = keysearch == null ? string.Empty : keysearch;
